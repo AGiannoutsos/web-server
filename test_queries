@@ -1,0 +1,375 @@
+/numPatientAdmissions COVID-19 01-01-2000 01-01-2021 Greece
+/numPatientAdmissions COVID-19 01-01-2000 01-01-2021 USA
+/numPatientAdmissions EVD 01-01-2000 01-01-2021 Greece
+/searchPatientRecord 12023
+/topk-AgeRanges 4 Greece COVID-19 01-01-2000 01-01-2021
+/topk-AgeRanges 3 India COVID-19 01-01-2000 01-01-2021
+/topk-AgeRanges 1 India COVID-19 02-05-2002 01-01-2021
+/topk-AgeRanges 2 India HIV 25-04-2002 01-01-2021
+/diseaseFrequency EVD 01-01-2000 01-01-2021 Greece
+/diseaseFrequency EBOLA 01-01-2000 01-01-2009
+/numPatientAdmissions COVID-19 01-01-2000 01-01-2021 
+/numPatientAdmissions COVID-19 01-01-2000 01-01-2021
+/numPatientAdmissions EVD 01-01-2000 01-01-2021
+
+
+
+/diseaseFrequency EVD 01-01-2000 01-01-2021
+
+
+*******************medium******************
+
+/diseaseFrequency EVD 01-01-2000 01-01-2021
+137
+/diseaseFrequency EVD 01-01-2000 01-01-2021 Greece
+5
+/diseaseFrequency EVD 01-01-2000 24-1-2010 Greece
+1
+/diseaseFrequency EVD 01-01-2000 27-1-2010 Greece
+2
+
+sigusr1
+
+/diseaseFrequency EVD 01-01-2000 24-1-2010 Greece
+2
+/diseaseFrequency EVD 01-01-2000 27-1-2010 Greece
+3
+
+/topk-AgeRanges 3 Germany SARS-COV-2 2-5-2005 1-4-2015
+60+: 100% 
+0-20: 0% 
+21-40: 0% 
+
+/topk-AgeRanges 3 Germ SARS-C 2-5-2004 1-12-2016
+/topk-AgeRanges 3 Germany SARS-COV-2 2-5-2004 1-12-2016
+0-20: 25% 
+21-40: 25% 
+41-60: 25%
+
+
+/searchPatientRecord 5000
+/searchPatientRecord 10000
+/searchPatientRecord 24185
+24185 Olivia Olivia SARS-COV-2 68 11-5-2005 --
+/searchPatientRecord 6001
+6001 Mason Isla H1N1 21 11-2-2016 --
+/searchPatientRecord 12997
+12997 Connor Callum SARS-COV-2 82 3-2-2019 3-2-2019
+
+/numPatientAdmissions COVID-19 18-4-2018 18-4-2020
+Japan 2
+Germany 0
+Italy 0
+USA 0
+Spain 0
+Argentina 0
+Greece 0
+Egypt 1
+Brazil 0
+France 0
+England 1
+India 0
+Canada 0
+Tyrkey 0
+China 1
+Australia 1
+
+
+
+
+/numPatientAdmissions SARS-1 18-4-2001 1-1-2021
+
+/numPatientAdmissions HIV 18-4-1999 1-1-2030
+Japan 5
+Germany 12
+Italy 14
+USA 10
+Spain 10
+Argentina 7
+Greece 12
+Egypt 14
+Brazil 9
+France 11
+England 9
+India 13
+Canada 10
+Tyrkey 9
+China 9
+Australia 8
+
+/numPatientAdmissions HIV 18-4-2010 1-1-2016
+Japan 2
+Germany 7
+Italy 2
+USA 4
+Spain 0
+Argentina 0
+Greece 6
+Egypt 4
+Brazil 1
+France 3
+England 3
+India 6
+Canada 1
+Tyrkey 0
+China 1
+Australia 1
+/numPatientAdmissions HIV 18-4-2010 1-1-2011
+Japan 0
+Germany 0
+Italy 0
+USA 0
+Spain 0
+Argentina 0
+Greece 2
+Egypt 0
+Brazil 0
+France 0
+England 1
+India 1
+Canada 0
+Tyrkey 0
+China 0
+Australia 0
+
+
+
+/numPatientAdmissions COVID-19 18-4-2001 1-1-2021
+Japan 15
+Germany 12
+Italy 6
+USA 15
+Spain 13
+Argentina 12
+Greece 9
+Egypt 14
+Brazil 7
+France 11
+England 7
+India 8
+Canada 10
+Tyrkey 7
+China 10
+Australia 10
+
+/numPatientAdmissions COVID-19 18-4-2000 1-1-2022
+Japan 15
+Germany 12
+Italy 7
+USA 15
+Spain 13
+Argentina 12
+Greece 9
+Egypt 14
+Brazil 10
+France 11
+England 7
+India 10
+Canada 10
+Tyrkey 7
+China 10
+Australia 10
+
+/numPatientDischarges MERS 02-06-2006 15-12-2015
+Japan 1
+Germany 0
+Italy 0
+USA 1
+Spain 0
+Argentina 0
+Greece 1
+Egypt 1
+Brazil 0
+France 2
+England 1
+India 1
+Canada 0
+Tyrkey 1
+China 0
+Australia 0
+
+/numPatientDischarges COVID-19 1-1-2018 18-4-2020
+Japan 0
+Germany 0
+Italy 0
+USA 0
+Spain 0
+Argentina 0
+Greece 0
+Egypt 2
+Brazil 0
+France 0
+England 0
+India 0
+Canada 0
+Tyrkey 0
+China 0
+Australia 1
+
+/numPatientDischarges COVID-19 1-1-2001 18-4-2022
+Japan 5
+Germany 2
+Italy 1
+USA 5
+Spain 3
+Argentina 4
+Greece 1
+Egypt 6
+Brazil 0
+France 3
+England 3
+India 4
+Canada 3
+Tyrkey 5
+China 3
+Australia 3
+
+/numPatientDischarges COVID 1-1-2018 18-4-2020
+/numPatientDischarges COVID-19 1-1-2018 18-4-2020
+
+
+/numPatientAdmissions COVID-19 18-4-2001 1-1-2021
+/numPatientAdmissions COVID 18-4-2001 1-1-2021
+
+
+
+
+
+/diseaseFrequency EVD 01-01-2000 01-01-2021 Greece
+/numPatientDischarges MERS 02-06-2006 15-12-2015
+/diseaseFrequency EVD 01-01-2000 27-1-2010 Greece
+/searchPatientRecord 12997
+/numPatientAdmissions COVID-19 18-4-2001 1-1-2021
+/numPatientAdmissions COVID 18-4-2001 1-1-2021
+/searchPatientRecord 6001
+/numPatientDischarges COVID 1-1-2018 18-4-2020
+/numPatientDischarges COVID-19 1-1-2018 18-4-2020
+/diseaseFrequency EVD 01-01-2000 01-01-2021
+/diseaseFrequency EVD 01-01-2000 24-1-2010 Greece
+/searchPatientRecord 5000
+/diseaseFrequency EVD 01-01-2000 24-1-2010 Greece
+/searchPatientRecord 10000
+/topk-AgeRanges 3 Germany SARS-COV-2 2-5-2005 1-4-2015
+/topk-AgeRanges 3 Germ SARS-C 2-5-2004 1-12-2016
+/numPatientDischarges MERS 02-06-2006 15-12-2015
+/searchPatientRecord 24185
+/numPatientDischarges MERS 02-06-2006 15-12-2015
+/numPatientAdmissions HIV 18-4-2010 1-1-2016
+/diseaseFrequency EVD 01-01-2000 27-1-2010 Greece
+/topk-AgeRanges 3 Germany SARS-COV-2 2-5-2004 1-12-2016
+
+
+
+
+
+*************unique*********
+/diseaseFrequency SARS-COV-2 01-01-2000 01-01-2021
+34
+/diseaseFrequency SARS-COV-2 01-01-2000 01-01-2021 Greece
+3
+/diseaseFrequency SARS-COV-2 01-01-2000 01-01-2008 Greece
+1
+/diseaseFrequency COVID-19 01-01-2000 01-01-2021
+34
+/diseaseFrequency COVID-2019 01-01-2000 01-01-2021
+
+/topk-AgeRanges 3 Germany SARS-COV-2 2-5-2000 1-4-2025
+60+: 100% 
+0-20: 0% 
+21-40: 0% 
+
+/topk-AgeRanges 3 Germany EVD 2-5-2005 1-4-2015
+
+/topk-AgeRanges 4 Germany H1N1 2-5-2005 1-4-2015
+/topk-AgeRanges 4 Germany H1N1 2-5-200 1-4-2100
+/topk-AgeRanges 3 Germany H1N1 2-5-2005 1-4-2015
+0-20: 50% 
+60+: 50% 
+21-40: 0% 
+
+/numPatientAdmissions COVID-19 18-4-2000 1-1-2022
+Japan 1
+Germany 3
+Italy 2
+Spain 3
+Argentina 3
+Greece 2
+Egypt 2
+Brazil 4
+France 2
+England 2
+India 2
+Canada 2
+Tyrkey 1
+China 3
+Australia 2
+
+/numPatientAdmissions COVID-2019 18-4-2000 1-1-2022
+
+
+/numPatientDischarges SARS-1 2-5-2010 20-03-2020
+/numPatientDischarges SARS-1 2-5-2010 20-03-2020
+Japan 0
+Germany 2
+Italy 0
+USA 0
+Spain 0
+Greece 0
+Egypt 0
+Brazil 0
+France 0
+England 0
+India 0
+China 0
+Australia 0
+
+
+************large*************
+/diseaseFrequency SARS-COV-2 01-01-2000 01-01-2021
+606
+
+
+*********xxl*********
+/topk-AgeRanges 4 Germany SARS-COV-2 2-5-2000 1-4-2025
+/topk-AgeRanges 4 Germany SARS-COV-2 2-5-2000 1-4-2025
+60+: 49% 
+41-60: 18% 
+21-40: 17% 
+0-20: 16% 
+
+/numPatientAdmissions COVID-19 18-4-2000 1-1-2022
+Japan 504
+Germany 490
+Italy 495
+USA 478
+Spain 472
+Argentina 516
+Greece 463
+Egypt 482
+Brazil 440
+France 508
+England 486
+India 486
+Canada 486
+Tyrkey 506
+China 468
+Australia 479
+
+/numPatientDischarges SARS-1 2-5-2010 20-03-2020
+Japan 59
+Germany 62
+Italy 81
+USA 72
+Spain 78
+Argentina 58
+Greece 78
+Egypt 86
+Brazil 88
+France 68
+England 70
+India 79
+Canada 54
+Tyrkey 65
+China 62
+Australia 71
+
