@@ -21,6 +21,8 @@ void kill_workers(Worker* worker, int num_of_workers);
 int fork_workers(Worker* worker, int i, int num_of_workers, char* buffer_size_string, int* pipe_id, char* input_dir);
 // send directories to workers
 void write_directories_to_workers(Worker* worker, int i, int num_of_workers, int* write_fds, int buffer_size);
+// send server info
+void write_server_info_to_workers(Worker* worker, int i, int num_of_workers, int* write_fds, int buffer_size, char* server_ip, char* server_port);
 // read i number of workers statistivs
 void read_statistics_from_workers(int i, int num_of_workers, int* read_fds, Buffer* buffer, int* previous_offset, int buffer_size);
 // queries

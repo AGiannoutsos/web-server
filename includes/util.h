@@ -8,6 +8,8 @@ typedef struct Worker{
     pid_t pid;
     int num_of_directories;
     char** directories;
+    char* server_ip;
+    char* server_port;
 } Worker;
 
 typedef struct Worker_directories{
@@ -19,6 +21,8 @@ typedef struct Worker_directories{
 // init worker struct
 int Worker_Init(Worker** worker, int num_of_workers);
 int Worker_Destroy(Worker** worker, int num_of_workers);
+// init server info
+int Worker_add_server_info(Worker* worker, int num_of_workers, char* server_ip, char* server_port);
 
 int max(int *array, int items);
 int sum(int *s, int n);

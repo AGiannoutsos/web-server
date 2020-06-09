@@ -9,14 +9,15 @@
 
 
 int number_of_args(char* message){
+    char *save_pointer;
     int num_of_words = 0;
     char* word;
     char* temp_message = malloc((strlen(message)+1)*sizeof(char));
     //find the num of arguments
     strcpy(temp_message,message);
-    word = strtok(temp_message," \n");
+    word = strtok_r(temp_message," \n", &save_pointer);
     while(word != NULL){
-        word = strtok(NULL," \n");
+        word = strtok_r(NULL," \n", &save_pointer);
         num_of_words++;
     }
 
@@ -135,6 +136,7 @@ int Message_to_vector(char* message, Message_vector* message_vector){
     char* arg;
     char** args;
     char* temp_message;
+    char* save_pointer;
     Message_Delete(message_vector);
     // chanhe temp message with strtok
 
@@ -162,11 +164,12 @@ int Message_to_vector(char* message, Message_vector* message_vector){
     // only if arguments available
     if (num_of_args > 0){
         args = malloc(num_of_args*sizeof(char*)); 
-        arg = strtok(temp_message," \n");
+        arg = strtok_r(temp_message," \n", &save_pointer);
         args[0] = malloc((strlen(arg)+1)*sizeof(char));
         strcpy(args[0],arg);
         for (int i = 1; i < num_of_args; i++){
-            arg = strtok(NULL," \n");
+            arg = strtok_r(NULL," \n", &save_pointer);
+            // printf("arg -> %s\n",arg);
             args[i] = malloc((strlen(arg)+1)*sizeof(char));
             strcpy(args[i],arg);
             // if(strcmp(arg, MSG_END) == 0)

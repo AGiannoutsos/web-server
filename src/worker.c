@@ -10,6 +10,13 @@
 #include <dirent.h>
 #include <sys/select.h>
 
+// socket
+#include <netdb.h>
+#include <sys/wait.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
 #include "../includes/worker_functions.h"
 
 #include "../includes/message_handlers.h"
@@ -19,10 +26,12 @@
 #include "../includes/avl_tree.h"
 #include "../includes/ht_avlt.h"
 #include "../includes/queries_worker.h"
+#include "../includes/socket_functions.h"
 
 
 
 #define MAX_FILE_PATH 515
+#define IP_ADDRESS "0.0.0.0"
 
 extern int errno;
 
@@ -113,14 +122,40 @@ int main(int arc, char** argv){
     // read direcotries 
     Message_vector directories_message;
     Message_Init(&directories_message);
+    Message_vector server_info_message;
+    Message_Init(&server_info_message);
     Message_Create_buffer_offset(&buffer, &previous_offset, 1);
     // get message of directories
     previous_offset = Message_Read_from_one(read_fd, 0, &directories_message, buffer, previous_offset, buffer_size);
     // copy them on me_worker info
     get_directories_per_worker_RR(me_worker, 1, directories_message.args, directories_message.num_of_args);
 
+    // get server info ip and port
+    previous_offset = Message_Read_from_one(read_fd, 0, &server_info_message, buffer, previous_offset, buffer_size);
+    Worker_add_server_info(me_worker, 1, server_info_message.args[0], server_info_message.args[1]);
+    Message_Print(&server_info_message);
     // delete message
     Message_Delete(&directories_message);
+    Message_Delete(&server_info_message);
+
+    // create socket to accept connections
+    int queries_socket = SOCKET_Create(AF_INET, SOCK_STREAM, 0, IP_ADDRESS, 500);
+    check(queries_socket, "Socket problem");
+    printf("socket-> %d\n",queries_socket);
+
+    // get the random available port number
+    struct sockaddr_in connection_addres;
+    memset(&connection_addres, 0, sizeof(connection_addres));
+    socklen_t connection_addres_len = sizeof(connection_addres);
+
+    check( getsockname(queries_socket, (struct sockaddr*) &connection_addres, &connection_addres_len), "Socket get name error" );
+    int queries_socket_port = ntohs(connection_addres.sin_port);
+
+
+    // connect with server
+    int server_socket = SOCKET_Connect(AF_INET, SOCK_STREAM, atoi(me_worker->server_port), me_worker->server_ip);
+    check(server_socket, "Server connection failed");
+    printf("\n port numberr %d  %d\n\n", queries_socket_port, server_socket);
 
 
     // read files and store them in a hashtable and in all the data structures
@@ -130,7 +165,7 @@ int main(int arc, char** argv){
     HT_AVLT_Init(&country_hash_table, 5, 512);
     
     // store in all the data structures
-    get_files_in_data_structures_send_statistics(write_fd[0], buffer_size, input_dir, me_worker->directories , me_worker->num_of_directories, &files_hashtable, &patient_list, &disease_hash_table, &country_hash_table);
+    get_files_in_data_structures_send_statistics(server_socket, buffer_size, input_dir, me_worker->directories , me_worker->num_of_directories, &files_hashtable, &patient_list, &disease_hash_table, &country_hash_table);
 
 
     char srtring_command[READ_BUFFER_SIZE];
@@ -144,6 +179,7 @@ int main(int arc, char** argv){
 
     // start accepting queries
     do{
+        printf("ip %s port %s\n",me_worker->server_ip, me_worker->server_port);
         // Listen command from master
         previous_offset = Message_Read_from_one_signal(read_fd, 0, &command, buffer, previous_offset, buffer_size);
 

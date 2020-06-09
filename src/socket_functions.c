@@ -11,6 +11,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include "../includes/socket_functions.h"
+
 // create bind and set listening socket
 // return the socket file descriptor
 int SOCKET_Create(int _domain, int _type, int _port, char* _addr, int _n_listen){
@@ -37,7 +39,7 @@ int SOCKET_Create(int _domain, int _type, int _port, char* _addr, int _n_listen)
     inet_aton(_addr, &addr);
     sock_addr_info.sin_family = _domain;
     sock_addr_info.sin_addr.s_addr = addr.s_addr; 
-    sock_addr_info.sin_port = htons(_port);
+    sock_addr_info.sin_port = htons( (uint16_t)_port );
 
     // bind
     err = bind(sock, (struct sockaddr*) &sock_addr_info, sizeof(sock_addr_info)); 
@@ -56,4 +58,35 @@ int SOCKET_Create(int _domain, int _type, int _port, char* _addr, int _n_listen)
     // return socket fd
     return sock;
 
+}
+
+// connect to a socket and return thee file descriptor
+int SOCKET_Connect(int _domain, int _type, int _port, char* _addr){
+    int err = 0;
+
+    // create socket
+    int sock = socket(_domain, _type, 0);
+    if (sock < 0){
+        perror("Socket creation");
+        return sock;
+    }
+
+    // sock addr
+    struct sockaddr_in sock_addr_info;
+    struct in_addr addr;
+    inet_aton(_addr, &addr);
+    sock_addr_info.sin_family = _domain;
+    sock_addr_info.sin_addr.s_addr = addr.s_addr; 
+    sock_addr_info.sin_port = htons( (uint16_t)_port );
+
+
+
+    // connect to server
+    err = connect(sock, (struct sockaddr*) &sock_addr_info, sizeof(sock_addr_info));
+    if ( err < 0 ){
+        perror("Connection failed");
+        return err;
+    }
+
+    return sock;
 }

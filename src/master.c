@@ -86,6 +86,10 @@ int main(int argc, char** argv){
     char* input_dir;
     char* buffer_size_string;
 
+    // server ip
+    char* server_ip;
+    char* server_port;
+
     // pipes
     int* write_fds;
     int* read_fds;
@@ -100,13 +104,21 @@ int main(int argc, char** argv){
     int err = 0;
     for (int i = 1; i < argc; i++){
 
-        if(strcmp(argv[i],"-w") == 0)
+        if(strcmp(argv[i],"-w") == 0){
             num_of_workers = atoi(argv[i+1]);
-        else if(strcmp(argv[i],"-i") == 0)
+        }
+        else if(strcmp(argv[i],"-i") == 0){
             input_dir = argv[i+1];
+        }
         else if(strcmp(argv[i],"-b") == 0){
             buffer_size = atoi(argv[i+1]);
             buffer_size_string = argv[i+1];
+        }
+        else if(strcmp(argv[i],"-s") == 0){
+            server_ip = argv[i+1];
+        }
+        else if(strcmp(argv[i],"-p") == 0){
+            server_port = argv[i+1];
         }
         
     }
@@ -121,6 +133,9 @@ int main(int argc, char** argv){
 
     // init workers
     Worker_Init(&worker, num_of_workers);
+
+    // init server info
+    Worker_add_server_info(worker, num_of_workers, server_ip, server_port);
     
     // assign directories to workers with Round Robin method
     get_directories_per_worker_RR(worker, num_of_workers, directories, num_of_directories);
@@ -150,9 +165,12 @@ int main(int argc, char** argv){
 
     // send directories to workers via pipe
     write_directories_to_workers(worker, 0, num_of_workers, write_fds, buffer_size);
+    
+    // send server ip and port
+    write_server_info_to_workers(worker, 0, num_of_workers, write_fds, buffer_size, server_ip, server_port);
 
     // get the statistics from the workers
-    read_statistics_from_workers(0, num_of_workers, read_fds, buffer, previous_offset, buffer_size);
+    // read_statistics_from_workers(0, num_of_workers, read_fds, buffer, previous_offset, buffer_size);
     
    
 

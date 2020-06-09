@@ -3,6 +3,8 @@
 #include <string.h>
 #include <stdint.h>
 #include <errno.h>
+#include <pthread.h>
+
 
 #include "../includes/circular_buffer.h"
 
@@ -16,13 +18,40 @@ void CBUFFER_Init(Circular_Buffer* cbuffer, int cbuffer_size){
     cbuffer->tail = 0;
     cbuffer->is_state = EMPTY;
 
+    // non sync buffer
+    cbuffer->cbuffer_mutex = NULL;
+    cbuffer->cbuffer_empty_condition = NULL;
+    cbuffer->cbuffer_full_condition = NULL;
+
+
+    cbuffer->cbuffer_node = malloc(cbuffer_size*sizeof(Circular_Buffer_node));
+    for (int i = 0; i < cbuffer_size; i++){
+        cbuffer->cbuffer_node[i].socket = 0;
+        cbuffer->cbuffer_node[i].type = 0;
+    }
+
+    
+}
+
+void CBUFFER_Init_sync(Circular_Buffer* cbuffer, int cbuffer_size, pthread_mutex_t* cbuffer_mutex, pthread_cond_t* cbuffer_empty_condition, pthread_cond_t* cbuffer_full_condition){
+
+    memset(cbuffer, 0, sizeof(Circular_Buffer));
+    cbuffer->size = cbuffer_size;
+    cbuffer->head = 0;
+    cbuffer->tail = 0;
+    cbuffer->is_state = EMPTY;
+
+    // sync buffer
+    cbuffer->cbuffer_mutex = cbuffer_mutex;
+    cbuffer->cbuffer_empty_condition = cbuffer_empty_condition;
+    cbuffer->cbuffer_full_condition = cbuffer_full_condition;
+
     cbuffer->cbuffer_node = malloc(cbuffer_size*sizeof(Circular_Buffer_node));
     for (int i = 0; i < cbuffer_size; i++){
         cbuffer->cbuffer_node[i].socket = 0;
         cbuffer->cbuffer_node[i].type = 0;
     }
     
-
 }
 
 void CBUFFER_Destroy(Circular_Buffer* cbuffer){
@@ -39,6 +68,7 @@ int CBUFFER_Is_Full(Circular_Buffer* cbuffer){
 }
 
 int CBUFFER_Is_Empty(Circular_Buffer* cbuffer){
+
     if (cbuffer->is_state == EMPTY){
         return 1;
     }
@@ -49,7 +79,7 @@ int CBUFFER_Is_Empty(Circular_Buffer* cbuffer){
 
 // neither full nor empty
 int CBUFFER_Is_Available(Circular_Buffer* cbuffer){
-    if (cbuffer->is_state == AVAILABLE){
+    if (cbuffer->is_state == AVAILABLE || cbuffer->is_state == EMPTY){
         return 1;
     }
     else{
@@ -86,6 +116,40 @@ int CBUFFER_Add(Circular_Buffer* cbuffer, int socket, int type){
         return 1;
     }
 
+}
+
+
+// add with syncronization
+int CBUFFER_Add_sync(Circular_Buffer* cbuffer, int socket, int type){
+
+    pthread_mutex_lock(cbuffer->cbuffer_mutex);
+
+    while( CBUFFER_Is_Full(cbuffer)){
+        printf("found buffer full!! \n\n");
+        // wait to empy signal
+        pthread_cond_wait(cbuffer->cbuffer_empty_condition, cbuffer->cbuffer_mutex);
+    }
+
+    CBUFFER_Add(cbuffer, socket, type);
+    
+    pthread_mutex_unlock(cbuffer->cbuffer_mutex);
+    pthread_cond_signal(cbuffer->cbuffer_full_condition);
+}
+
+// pop with syncronization
+int CBUFFER_Pop_sync(Circular_Buffer* cbuffer, int* socket, int* type){
+    pthread_mutex_lock(cbuffer->cbuffer_mutex);
+
+    while ( CBUFFER_Is_Empty(cbuffer) ){
+        printf("found buffer empty!!! %ld \n\n", pthread_self()%10);
+        // wait till full signal
+        pthread_cond_wait(cbuffer->cbuffer_full_condition, cbuffer->cbuffer_mutex);
+    }
+
+    CBUFFER_Pop(cbuffer, socket, type);
+
+    pthread_mutex_unlock(cbuffer->cbuffer_mutex);
+    pthread_cond_signal(cbuffer->cbuffer_empty_condition);
 }
 
 int CBUFFER_Pop(Circular_Buffer* cbuffer, int* socket, int* type){

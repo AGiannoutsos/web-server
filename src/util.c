@@ -245,8 +245,23 @@ int Worker_Destroy(Worker** worker, int num_of_workers){
             free((*worker)[i].directories[j]);
         }
         free((*worker)[i].directories);
+        free((*worker)[i].server_ip);
+        free((*worker)[i].server_port);
     }
     free(*worker);
+}
+
+int Worker_add_server_info(Worker* worker, int num_of_workers, char* server_ip, char* server_port){
+    for (int i = 0; i < num_of_workers; i++){
+        // copy server ip
+        (worker)[i].server_ip = malloc((strlen(server_ip)+1)*sizeof(char));
+        strcpy((worker)[i].server_ip, server_ip );
+
+        // copy server port
+        (worker)[i].server_port = malloc((strlen(server_port)+1)*sizeof(char));
+        strcpy((worker)[i].server_port, server_port );
+        
+    }
 }
 
 int create_pipes(int* pipe_id, int num_of_workers){

@@ -68,6 +68,27 @@ void write_directories_to_workers(Worker* worker, int i, int num_of_workers, int
     }
 }
 
+void write_server_info_to_workers(Worker* worker, int i, int num_of_workers, int* write_fds, int buffer_size, char* server_ip, char* server_port){
+    Message_vector temp_message;
+    // create mesasge with server info
+    temp_message.num_of_args = 2;
+    temp_message.args = malloc(temp_message.num_of_args*sizeof(char*));
+
+    // fill vectors
+    temp_message.args[0] = malloc((strlen(server_ip)+1)*sizeof(char));
+    strcpy(temp_message.args[0], server_ip);
+
+    temp_message.args[1] = malloc((strlen(server_port)+1)*sizeof(char));
+    strcpy(temp_message.args[1], server_port);
+
+    for (; i < num_of_workers; i++){
+
+        Message_Write(write_fds[i], &temp_message, buffer_size);
+        // Message_Print(&temp_message);
+    }
+    Message_Delete(&temp_message);
+}
+
 void read_statistics_from_workers(int i, int num_of_workers, int* read_fds, Buffer* buffer, int* previous_offset, int buffer_size){
     // can also read from one worker statistics
     Message_vector statistics;
@@ -80,6 +101,7 @@ void read_statistics_from_workers(int i, int num_of_workers, int* read_fds, Buff
         previous_offset = Message_Read_from_one(read_fds, i, &statistics, buffer, previous_offset, buffer_size);
         while(!Message_Is_End_Com(&statistics, 1)){
             Statistics_Print(&statistics, stdout);
+            printf("fdd-> %d\n",*read_fds);
             previous_offset = Message_Read_from_one(read_fds, i, &statistics, buffer, previous_offset, buffer_size);
         }
         read(read_fds[i], inter, buffer_size);
@@ -121,7 +143,7 @@ void SIGINT_function(Worker** worker, int num_of_workers, char*** directories, i
     wait_workers(worker[0], num_of_workers);
     print_log(directories[0], num_of_directories, success, fail);
     free_master(worker, num_of_workers, read_fds, write_fds, buffer, previous_offset, directories, num_of_directories, pipe_id);
-    exit(signal_status);
+    exit(2);
 }
 
 void SIGCHLD_function(Worker* worker, int num_of_workers, int* write_fds, int* read_fds, Buffer* buffer, int* previous_offset, int* pipe_id, int buffer_size, char* buffer_size_string, char* input_dir) {
@@ -187,6 +209,9 @@ void SIGCHLD_function(Worker* worker, int num_of_workers, int* write_fds, int* r
             // send worker directories
             write_directories_to_workers(worker, terminaterd_worker_position, terminaterd_worker_position+1, write_fds, buffer_size);
 
+            // send server ip and port
+            write_server_info_to_workers(worker, terminaterd_worker_position, terminaterd_worker_position+1, write_fds, buffer_size, worker[terminaterd_worker_position].server_ip ,  worker[terminaterd_worker_position].server_port);
+
             // receive statistics
             read_statistics_from_workers(terminaterd_worker_position, terminaterd_worker_position+1, read_fds, buffer, previous_offset, buffer_size);
             
@@ -243,7 +268,7 @@ int queries(Message_vector* command, Worker* worker,  int num_of_workers, int* w
             (*fail)++;
 
     }
-    else if(strcmp(command->args[0], "/exit") == 0 || exit_status == 1){
+    else if(strcmp(command->args[0], "/exit") == 0 /*|| exit_status == 1*/){
         printf("exiting\n");
         for (int i = 0; i < num_of_workers; i++){
             Message_Write(write_fds[i], command, buffer_size);
