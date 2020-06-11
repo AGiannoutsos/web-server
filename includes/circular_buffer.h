@@ -34,6 +34,7 @@ typedef struct Circular_Buffer{
 } Circular_Buffer;
 
 
+
 void CBUFFER_Init(Circular_Buffer* cbuffer, int cbuffer_size);
 // for synced producer consumer buffer
 void CBUFFER_Init_sync(Circular_Buffer* cbuffer, int cbuffer_size, pthread_mutex_t* cbuffer_mutex, pthread_cond_t* cbuffer_empty_condition, pthread_cond_t* cbuffer_full_condition);
@@ -54,5 +55,23 @@ int CBUFFER_Pop_sync(Circular_Buffer* cbuffer, int* socket, int* type);
 
 // print for debugging
 void CBUFFER_Print(Circular_Buffer* cbuffer);
+
+
+
+
+typedef struct Port_Stack{
+    char* ip_address;
+    int size;
+    int num_of_ports;
+    int* port;    
+} Port_Stack;
+
+
+void PSTACK_Init(Port_Stack* stack);
+void PSTACK_Destroy(Port_Stack* stack);
+
+int PSTACK_Insert(Port_Stack* stack, int port, char* ip_address);
+int* PSTACK_Get_Stack(Port_Stack* stack);
+
 
 #endif

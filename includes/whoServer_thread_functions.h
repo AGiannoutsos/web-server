@@ -24,6 +24,8 @@ extern pthread_cond_t cbuffer_full_condition;
 typedef struct Thread_Args{
 
     Circular_Buffer* circular_buffer; 
+    Port_Stack* workers_ports;
+    pthread_mutex_t* worker_stack_mutex;
     int counter;
 
 } Thread_Args;
@@ -31,9 +33,8 @@ typedef struct Thread_Args{
 
 void *thread_connection_handler(void *args);
 
-int statistics_connection_handler(int statistics_socket);
-
-int queries_connection_handler(int queries_socket);
+int statistics_connection_handler(int statistics_socket, Port_Stack* workers_ports, pthread_mutex_t* worker_stack_mutex);
+int queries_connection_handler(int client_socket, Port_Stack* workers_ports);
 
 
 #endif

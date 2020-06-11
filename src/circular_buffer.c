@@ -196,3 +196,44 @@ void CBUFFER_Print(Circular_Buffer* cbuffer){
     
 
 }
+
+// init port stack
+// last item is null
+void PSTACK_Init(Port_Stack* stack){
+
+    stack->num_of_ports = 0;
+    stack->port = malloc(sizeof(int));
+    stack->port[0] = 0;
+    stack->size = 1;
+    stack->ip_address = NULL;
+}
+
+
+
+void PSTACK_Destroy(Port_Stack* stack){
+    free(stack->port);
+}
+
+
+int PSTACK_Insert(Port_Stack* stack, int port, char* ip_address){
+
+    // reallocate and add NULL in the end
+    stack->port = realloc(stack->port, (stack->size + 1)*sizeof(int));
+    stack->port[stack->size-1] = port;
+    stack->port[stack->size] = 0;
+    stack->num_of_ports++;
+    stack->size++;
+    // copy ip address
+    if (stack->ip_address == NULL){
+        stack->ip_address = malloc((strlen(ip_address)+1)*sizeof(char));
+        strcpy(stack->ip_address, ip_address);
+    }
+    printf("insrted %d\n",port);
+
+}
+
+
+
+int* PSTACK_Get_Stack(Port_Stack* stack){
+    return stack->port;
+}

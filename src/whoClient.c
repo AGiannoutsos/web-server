@@ -15,6 +15,26 @@
 #include "../includes/socket_functions.h"
 #include "../includes/queries_list.h"
 
+// mutexes for synchronization
+// start thread mutexes
+pthread_mutex_t threads_online_mutex;
+pthread_cond_t threads_online_condition;
+
+pthread_mutex_t start_queries_mutex;
+pthread_cond_t start_queries_condition;
+
+int start_queries;
+int threads_online;
+
+// end thread mutexes
+pthread_mutex_t threads_offline_mutex;
+pthread_cond_t threads_offline_condition;
+
+pthread_mutex_t end_queries_mutex;
+pthread_cond_t end_queries_condition;
+
+int end_queries;
+int threads_offline;
 
 int main(int argc, char** argv){
     printf("hello wolrd\n");
@@ -24,6 +44,7 @@ int main(int argc, char** argv){
     int server_port = 0;
     int num_of_threads = 0;
     int err = 0;
+    
 
     for (int i = 1; i < argc; i++){
 
@@ -47,10 +68,37 @@ int main(int argc, char** argv){
     Queries_List queries_list;
     QLIST_Init(&queries_list);
 
+    // init mutexes
+    // and shared variables
+    start_queries = 0;
+    threads_online = 0;
+    pthread_mutex_init(&threads_online_mutex, NULL);
+    pthread_cond_init(&threads_online_condition, NULL);
+
+    pthread_mutex_init(&start_queries_mutex, NULL);
+    pthread_cond_init(&start_queries_condition, NULL);
+
+    end_queries = 0;
+    threads_offline = 0;
+    pthread_mutex_init(&threads_offline_mutex, NULL);
+    pthread_cond_init(&threads_offline_condition, NULL);
+
+    pthread_mutex_init(&end_queries_mutex, NULL);
+    pthread_cond_init(&end_queries_condition, NULL);
+
+
     // init threads
     pthread_t* thread = malloc(num_of_threads*sizeof(pthread_t));
     memset(thread, 0, num_of_threads*sizeof(pthread_t));
     int thread_i = 0;
+    // init thread arhuments
+    Thread_Args* thread_args = malloc(num_of_threads*sizeof(Thread_Args));
+    memset(thread_args, 0, num_of_threads*sizeof(Thread_Args));
+
+    // init attribute
+    pthread_attr_t attribute;
+    pthread_attr_init(&attribute);
+    pthread_attr_setdetachstate(&attribute, 1);
 
     // open queries file
     FILE* queries_file_stream = fopen(queries_file_name, "r");
@@ -70,10 +118,14 @@ int main(int argc, char** argv){
 
         // insert to queries list
         QLIST_Insert(&queries_list, read_file_buffer);
-        printf("%d> %s",  num_of_queries_read, QLIST_Get_Last_query(&queries_list));
+        // printf("%d> %s",  num_of_queries_read, QLIST_Get_Last_query(&queries_list));
+        // create the thread args
+        thread_args[thread_i].query = QLIST_Get_Last_query(&queries_list);
+        thread_args[thread_i].server_ip = server_ip;
+        thread_args[thread_i].server_port = server_port;
 
         // create thread and pass it the query
-        err = pthread_create( &(thread[thread_i]), NULL, thread_connection_handler, (void*) QLIST_Get_Last_query(&queries_list));
+        err = pthread_create( &(thread[thread_i]), NULL, thread_connection_handler, (void*) &(thread_args[thread_i]));
         check_t(err, "Thread Create error");
         thread_i++;
 
@@ -99,16 +151,53 @@ int main(int argc, char** argv){
             // mutex_up start_query
             // bradcast_ start_query  
 
-
-
-            // wait for threads to join
-            for (int i = 0; i < thread_i; i++){
-                err = pthread_join(thread[i], NULL);
-                perror_t(err, "Thread Join error");
-                // pritf("\n\n-->>%s<<---\n\n", strerror(err));
-                printf("joiedd\n");
+            // wait for threads to start at the same time
+            pthread_mutex_lock(&threads_online_mutex);
+            while( threads_online < thread_i){
+                printf(" online %d i %d\n",threads_online, thread_i);
+                pthread_cond_wait(&threads_online_condition, &threads_online_mutex);
             }
+            pthread_mutex_unlock(&threads_online_mutex);
+
+
+            pthread_mutex_lock(&start_queries_mutex);
+            start_queries = 1;
+            pthread_mutex_unlock(&start_queries_mutex);
+            pthread_cond_broadcast(&start_queries_condition);
+
+            
+
+
+                // sleep(1);
+            // wait for threads to join
+            // for (int i = 0; i < thread_i; i++){
+            //     err = pthread_join(thread[i], NULL);
+            //     perror_t(err, "Thread Join error");
+            //     // pritf("\n\n-->>%s<<---\n\n", strerror(err));
+            //     printf("joiedd\n");
+            // }
+
+            // wait for all the threads to end at the same time
+            pthread_mutex_lock(&threads_offline_mutex);
+            while( threads_offline < thread_i){
+                // printf(" offline %d i %d\n",threads_offline, thread_i);
+                pthread_cond_wait(&threads_offline_condition, &threads_offline_mutex);
+            }
+            pthread_mutex_unlock(&threads_offline_mutex);
+
+
+            pthread_mutex_lock(&end_queries_mutex);
+            end_queries = 1;
+            pthread_mutex_unlock(&end_queries_mutex);
+            pthread_cond_broadcast(&end_queries_condition);
+
+
+            // reset global variables after all threads have ended
             thread_i = 0;
+            start_queries = 0;
+            end_queries = 0;
+            threads_online = 0;
+            threads_offline = 0;
         }
 
     }
@@ -136,22 +225,38 @@ int main(int argc, char** argv){
     //     perror("Connection failed");
     // printf("Connected!!");
     sleep(1);
+
+    // check_t( pthread_mutex_destroy(&threads_online_mutex), "Thread mutex destroy error");
+    // check_t( pthread_mutex_destroy(&threads_offline_mutex), "Thread mutex destroy error");
+    // check_t( pthread_mutex_destroy(&start_queries_mutex), "Thread mutex destroy error");
+    // check_t( pthread_mutex_destroy(&end_queries_mutex), "Thread mutex destroy error");
+
+    // check_t( pthread_cond_destroy(&threads_online_condition), "Thread condition destroy error");
+    // check_t( pthread_cond_destroy(&threads_offline_condition), "Thread condition destroy error");
+    // check_t( pthread_cond_destroy(&start_queries_condition), "Thread condition destroy error");
+    // check_t( pthread_cond_destroy(&end_queries_condition), "Thread condition destroy error");
+
     fclose(queries_file_stream);
     QLIST_Destroy(&queries_list);
     free(thread);
+    if( err = pthread_detach(pthread_self()) ) {
+        perror_t("Thread Detach error ", err);
+        exit(1);
+    }
 
-    char buf[100] = {0};
+    // pthread_exit(NULL);
+    // char buf[100] = {0};
 
-    int sock = SOCKET_Connect(AF_INET, SOCK_STREAM, server_port, server_ip);
-    check(sock, "Connection failed");
+    // int sock = SOCKET_Connect(AF_INET, SOCK_STREAM, server_port, server_ip);
+    // check(sock, "Connection failed");
 
-    FILE* sock_sream = fdopen(sock, "r+");
+    // FILE* sock_sream = fdopen(sock, "r+");
 
-    // while(strcmp(buf, "exit") != 0){
-        fgets(buf, 100, stdin);
-        fprintf(sock_sream, "%s xixi\n", buf);
+    // // while(strcmp(buf, "exit") != 0){
+    //     fgets(buf, 100, stdin);
+    //     fprintf(sock_sream, "%s xixi\n", buf);
 
-    // }
+    // // }
 
 
 }

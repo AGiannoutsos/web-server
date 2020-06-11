@@ -10,12 +10,14 @@
 #include <dirent.h>
 #include <sys/select.h>
 
-// socket
+// sockets
 #include <netdb.h>
+#include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <sys/select.h>
 
 #include "../includes/worker_functions.h"
 
@@ -141,8 +143,11 @@ int main(int arc, char** argv){
 
 
 
+
+
+
     // create socket to accept connections
-    int queries_socket = SOCKET_Create(AF_INET, SOCK_STREAM, 0, IP_ADDRESS, 500);
+    int queries_socket = SOCKET_Create(AF_INET, SOCK_STREAM, 0, IP_ADDRESS, LISTEN_DEFAULT);
     check(queries_socket, "Socket problem");
     printf("socket-> %d\n",queries_socket);
 
@@ -173,16 +178,25 @@ int main(int arc, char** argv){
     get_files_in_data_structures_send_statistics(server_socket, buffer_size, input_dir, me_worker->directories , me_worker->num_of_directories, &files_hashtable, &patient_list, &disease_hash_table, &country_hash_table);
 
 
-    // send socket queries port number to server
+    // send socket queries port number to server and ip address
     char port_string[64] = {0}; Message_vector queries_port_message; Message_Init(&queries_port_message);
-    queries_port_message.num_of_args = 1; queries_port_message.args = malloc(sizeof(char*));
+    queries_port_message.num_of_args = 2; queries_port_message.args = malloc(2*sizeof(char*));
     sprintf(port_string, "%d", queries_port); queries_port_message.args[0] = malloc((strlen(port_string)+1)*sizeof(char));
     strcpy(queries_port_message.args[0], port_string);
+    queries_port_message.args[1] = malloc((strlen(IP_ADDRESS)+1)*sizeof(char));
+    strcpy(queries_port_message.args[1], IP_ADDRESS);
 
     Message_Write(server_socket, &queries_port_message, buffer_size);
     Message_Write_End_Com(server_socket, buffer_size); 
 
-    char srtring_command[READ_BUFFER_SIZE];
+    // end communication with statistivs port of server
+    check( shutdown(server_socket, SHUT_RDWR), "Shutdown error");
+    close(server_socket);
+
+
+    struct sockaddr_in connection_addres_;
+    socklen_t connection_addres_len_ = 0;
+    int queries_fd = 0;
     int num_of_args = 0;
     int query_status = 0;
     Message_vector command;
@@ -194,14 +208,28 @@ int main(int arc, char** argv){
     // start accepting queries
     do{
         printf("ip %s port %s\n",me_worker->server_ip, me_worker->server_port);
+        // delete previous buffer
+        Message_Destroy_buffer_offset(&buffer, &previous_offset, 1);
+
+        // listen for server requests  
+        queries_fd = accept(queries_socket, (struct sockaddr*) &connection_addres_, &connection_addres_len_);
+        check(queries_fd, "Accept failed");
+
+        // set socket non-block
+        check( fcntl(queries_fd, F_SETFL, fcntl(queries_fd, F_GETFL, 0) | O_NONBLOCK), "Socket Non-block error");
+
+        // create new buffer for this only query
+        Message_Create_buffer_offset(&buffer, &previous_offset, 1);
+
         // Listen command from master
-        previous_offset = Message_Read_from_one_signal(read_fd, 0, &command, buffer, previous_offset, buffer_size);
+        previous_offset = Message_Read_from_one_signal(&queries_fd, 0, &command, buffer, previous_offset, buffer_size);
 
         queries_started = 1;
 
+        Message_Print(&command);
         // start query only if no signal has arrived
         if ( signal_occured == 0){
-            queries(&command, &success, &fail, me_worker, write_fd, buffer_size, &patient_list, &disease_hash_table, &country_hash_table);
+            queries(&command, &success, &fail, me_worker, &queries_fd, buffer_size, &patient_list, &disease_hash_table, &country_hash_table);
         }
         
         if ( signal_occured == 1){
@@ -226,6 +254,7 @@ int main(int arc, char** argv){
         }
 
         queries_started = 0;
+        close(queries_fd);
     } while(exit_status == 0);
 
 

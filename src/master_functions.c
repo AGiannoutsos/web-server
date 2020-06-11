@@ -219,6 +219,66 @@ void SIGCHLD_function(Worker* worker, int num_of_workers, int* write_fds, int* r
     }
 }
 
+int queries_server(Message_vector* command,  int num_of_workers, int* write_fds, int* read_fds, int buffer_size, int* success, int* fail){
+    int query_status = 0;
+
+
+    if(strcmp(command->args[0], "/diseaseFrequency") == 0){
+        // printf("Start query of diseaseFrequency\n\n");
+        query_status = disease_frequency(write_fds, read_fds, num_of_workers, command, buffer_size);
+        if(query_status > 0)
+            (*success)++;
+        else
+            (*fail)++;
+        // sleep(5);
+    }
+    else if(strcmp(command->args[0], "/topk-AgeRanges") == 0){
+        // printf("Start query of topk-AgeRanges\n\n");
+        query_status = topk_age_ranges(write_fds, read_fds, num_of_workers, command, buffer_size);
+        if(query_status > 0)
+            (*success)++;
+        else
+            (*fail)++;
+    }
+    else if(strcmp(command->args[0], "/searchPatientRecord") == 0){
+        // printf("Start query of searchPatientRecord\n\n");
+        query_status = search_patient_record(write_fds, read_fds, num_of_workers, command, buffer_size);
+        if(query_status > 0)
+            (*success)++;
+        else
+            (*fail)++;
+    }
+    else if(strcmp(command->args[0], "/numPatientAdmissions") == 0){
+        // printf("Start query of numPatientAdmissions\n\n");
+        query_status = num_patients_admissions_discharges(write_fds, read_fds, num_of_workers, command, buffer_size);
+        if(query_status > 0)
+            (*success)++;
+        else
+            (*fail)++;
+    }
+    else if(strcmp(command->args[0], "/numPatientDischarges") == 0){
+        query_status = num_patients_admissions_discharges(write_fds, read_fds, num_of_workers, command, buffer_size);
+        if(query_status > 0)
+            (*success)++;
+        else
+            (*fail)++;
+
+    }
+    else if(strcmp(command->args[0], "/exit") == 0 /*|| exit_status == 1*/){
+        printf("exiting\n");
+        for (int i = 0; i < num_of_workers; i++){
+            Message_Write(write_fds[i], command, buffer_size);
+        }
+        Message_Delete(command);
+
+
+        return 1;
+    }
+    else{
+        printf("error\n");
+    }
+    return 0;
+}
 
 int queries(Message_vector* command, Worker* worker,  int num_of_workers, int* write_fds, int* read_fds, int buffer_size, int* success, int* fail){
     int query_status = 0;

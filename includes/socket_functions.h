@@ -4,6 +4,8 @@
 
 #include <errno.h>
 
+#define LISTEN_DEFAULT 1000
+
 #define check(error, string) if(error<0) { perror(string);  exit(error); }
 
 

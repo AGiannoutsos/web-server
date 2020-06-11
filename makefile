@@ -9,7 +9,7 @@ FLAGS = -g
 SRC = $(wildcard $(SRCDIR)/*.c)
 OBJ = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRC))
 
-OBJ_SERV = build/whoServer.o build/circular_buffer.o build/whoServer_thread_functions.o build/util.o build/message_handlers.o build/master_functions.o build/socket_functions.o  build/queries_master.o 
+OBJ_SERV = build/whoServer.o build/circular_buffer.o build/whoServer_thread_functions.o build/util.o build/message_handlers.o build/master_functions.o build/socket_functions.o  build/queries_master.o  
  
 OBJ_CLNT = build/whoClient.o build/circular_buffer.o build/whoClient_thread_functions.o build/util.o build/message_handlers.o build/master_functions.o build/socket_functions.o build/whoClient_thread_functions.o build/queries_master.o build/queries_list.o
 
@@ -84,8 +84,6 @@ $(OBJDIR)/whoClient_thread_functions.o: $(SRCDIR)/whoClient_thread_functions.c
 $(OBJDIR)/queries_list.o: $(SRCDIR)/queries_list.c
 	echo compiling $? $@
 	$(CC) $(FLAGS) -I$(INCDIR) -c  $^ -o $@ -lpthread
-
-
 
 
 

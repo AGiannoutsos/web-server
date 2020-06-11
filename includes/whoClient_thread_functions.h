@@ -9,6 +9,21 @@
 #include <pthread.h>
 
 
+// mutexes for synchronization
+extern pthread_mutex_t threads_online_mutex;
+extern pthread_cond_t threads_online_condition;
+
+extern pthread_mutex_t start_queries_mutex;
+extern pthread_cond_t start_queries_condition;
+
+extern pthread_mutex_t threads_offline_mutex;
+extern pthread_cond_t threads_offline_condition;
+
+extern pthread_mutex_t end_queries_mutex;
+extern pthread_cond_t end_queries_condition;
+
+
+
 // error function
 #define perror_t(string,error) fprintf( stderr,"%s: %s\n", string, strerror(error))
 #define check_t(error, string) if(error != 0) { perror_t(string, error);  exit(error); }
@@ -18,6 +33,8 @@
 typedef struct Thread_Args{
 
     char* query; 
+    int server_port;
+    char* server_ip;
 
 } Thread_Args;
 

@@ -13,6 +13,8 @@
 #define READ_BUFFER_SIZE 4096
 #define READ_BUFFER_SIZE_INCREASE_FACTOR 2
 
+#define BUFFER_DEFAULT_SIZE 100
+
 typedef struct Message_vector{
 
     int num_of_args;
