@@ -134,9 +134,12 @@ int main(int arc, char** argv){
     previous_offset = Message_Read_from_one(read_fd, 0, &server_info_message, buffer, previous_offset, buffer_size);
     Worker_add_server_info(me_worker, 1, server_info_message.args[0], server_info_message.args[1]);
     Message_Print(&server_info_message);
+
     // delete message
     Message_Delete(&directories_message);
     Message_Delete(&server_info_message);
+
+
 
     // create socket to accept connections
     int queries_socket = SOCKET_Create(AF_INET, SOCK_STREAM, 0, IP_ADDRESS, 500);
@@ -149,13 +152,15 @@ int main(int arc, char** argv){
     socklen_t connection_addres_len = sizeof(connection_addres);
 
     check( getsockname(queries_socket, (struct sockaddr*) &connection_addres, &connection_addres_len), "Socket get name error" );
-    int queries_socket_port = ntohs(connection_addres.sin_port);
+    int queries_port = ntohs(connection_addres.sin_port);
 
 
     // connect with server
     int server_socket = SOCKET_Connect(AF_INET, SOCK_STREAM, atoi(me_worker->server_port), me_worker->server_ip);
     check(server_socket, "Server connection failed");
-    printf("\n port numberr %d  %d\n\n", queries_socket_port, server_socket);
+    printf("\n port numberr %d  %d\n\n", queries_port, server_socket);
+
+
 
 
     // read files and store them in a hashtable and in all the data structures
@@ -167,6 +172,15 @@ int main(int arc, char** argv){
     // store in all the data structures
     get_files_in_data_structures_send_statistics(server_socket, buffer_size, input_dir, me_worker->directories , me_worker->num_of_directories, &files_hashtable, &patient_list, &disease_hash_table, &country_hash_table);
 
+
+    // send socket queries port number to server
+    char port_string[64] = {0}; Message_vector queries_port_message; Message_Init(&queries_port_message);
+    queries_port_message.num_of_args = 1; queries_port_message.args = malloc(sizeof(char*));
+    sprintf(port_string, "%d", queries_port); queries_port_message.args[0] = malloc((strlen(port_string)+1)*sizeof(char));
+    strcpy(queries_port_message.args[0], port_string);
+
+    Message_Write(server_socket, &queries_port_message, buffer_size);
+    Message_Write_End_Com(server_socket, buffer_size); 
 
     char srtring_command[READ_BUFFER_SIZE];
     int num_of_args = 0;

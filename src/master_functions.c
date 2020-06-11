@@ -100,12 +100,12 @@ void read_statistics_from_workers(int i, int num_of_workers, int* read_fds, Buff
     for (; i < num_of_workers; i++){
         previous_offset = Message_Read_from_one(read_fds, i, &statistics, buffer, previous_offset, buffer_size);
         while(!Message_Is_End_Com(&statistics, 1)){
-            Statistics_Print(&statistics, stdout);
-            printf("fdd-> %d\n",*read_fds);
+            Statistics_Print(&statistics, stderr);
+            // printf("fdd-> %d\n",*read_fds);
             previous_offset = Message_Read_from_one(read_fds, i, &statistics, buffer, previous_offset, buffer_size);
         }
-        read(read_fds[i], inter, buffer_size);
-        previous_offset[i] = 0;
+        // read(read_fds[i], inter, buffer_size);
+        // previous_offset[i] = 0;
     }
     Message_Delete(&statistics);
 }

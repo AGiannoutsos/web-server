@@ -175,19 +175,11 @@ int main(int argc, char **argv) {
                 printf("queeeeeeeeeeriiiiiiisssssssssssss\n");
                 new_sock = accept(queries_socket, (struct sockaddr*) &connection_addres, &connection_addres_len);
                 check(new_sock, "Accept failed");
-                // if (() < 0){
-                //     perror("Accept failed");
-                //     exit(new_sock);
-                // }
+
                 CBUFFER_Add_sync(&circular_buffer, new_sock, QERY_TYPE);
 
                 printf("New connection!!\n");
-                sock_stream = fdopen(new_sock, "r+");
-                // listen to client
-                fgets(buf, 100, sock_stream);
-                printf("%s\n",buf);
-                if ( shutdown(new_sock, SHUT_RDWR) < 0)
-                    perror("Shutdown failed");
+                
 
             }
             CBUFFER_Print(&circular_buffer);
@@ -208,13 +200,10 @@ int main(int argc, char **argv) {
     for (int i = 0; i < num_of_threads; i++){
 
         err = pthread_join(thread[i], NULL);
-        check_t(err, "Thread Join error");
-        // if(  ) {
-        //     perror_t("Thread Join error", err);
-        //     exit(1); 
-        // }
+        // check_t(err, "Thread Join error");
 
     }
+    free(thread);
 
 }
 

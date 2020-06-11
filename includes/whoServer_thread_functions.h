@@ -1,5 +1,5 @@
-#ifndef WHOSERVER_THREAD_FUNCTIONS
-#define WHOSERVER_THREAD_FUNCTIONS
+#ifndef WHOSERVER_THREAD_FUNCTIONS_H
+#define WHOSERVER_THREAD_FUNCTIONS_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,6 +32,8 @@ typedef struct Thread_Args{
 void *thread_connection_handler(void *args);
 
 int statistics_connection_handler(int statistics_socket);
+
+int queries_connection_handler(int queries_socket);
 
 
 #endif
