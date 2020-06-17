@@ -48,6 +48,7 @@ int Message_Write_string(int fd, char* buffer, int buffer_size);
 int Message_to_vector(char* message, Message_vector* message_vector);
 int Message_to_string(Message_vector* message, char** string);
 void Message_Print(Message_vector* message_vector);
+void Message_Print_results(Message_vector* results);
 
 // send message function
 int Message_Write(int fd, Message_vector* message, int buffer_size);
@@ -56,5 +57,7 @@ int Message_Write_to_many(int* fds,int num_of_fds, Message_vector* message, int 
 // read message function
 int* Message_Read_from_one(int* fd, int num_of_fd, Message_vector* _message, Buffer* buffer, int* previous_offset, int buffer_size);
 int Message_Read_string(int fd, int bytes_write, Message_vector* message, Buffer* buffer, int buffer_size);
+
+int* Message_Read_from_one_socket(int* fds, int num_of_fd, Message_vector* _message, Buffer* buffer, int* previous_offset, int buffer_size);
 
 #endif

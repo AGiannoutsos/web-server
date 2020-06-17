@@ -207,7 +207,7 @@ void free_worker(Worker** me_worker, int** write_fd, int** read_fd, Buffer** buf
     HT_AVLT_Destroy(country_hash_table);
     HT_AVLT_Destroy(disease_hash_table);
     PL_Destroy(patient_list);
-    Message_Destroy_buffer_offset(buffer, previous_offset, 1);
+    // Message_Destroy_buffer_offset(buffer, previous_offset, 1);
     close_pipes(write_fd, "master", &pipe_id, 1);
     close_pipes(read_fd, "worker", &pipe_id, 1);
     Worker_Destroy(me_worker, 1);

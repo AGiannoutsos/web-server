@@ -1,1 +1,444 @@
-/numPatientAdmissions COVID-19 18-4-2000 1-1-2022
+/diseaseFrequency COVID-19 01-01-2000 01-01-2021
+/searchPatientRecord 50
+/diseaseFrequency COVID-19 01-01-2000 01-01-2021
+/searchPatientRecord 100
+/diseaseFrequency SARS-COV-2 01-01-2000 01-01-2021 Greece
+/topk-AgeRanges 3 Germany H1N1 2-5-2005 1-4-2015
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015  
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015  
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015  
+/diseaseFrequency COVID-19 01-01-2000 01-01-2021
+/searchPatientRecord 50
+/diseaseFrequency COVID-19 01-01-2000 01-01-2021
+/searchPatientRecord 100
+/diseaseFrequency SARS-COV-2 01-01-2000 01-01-2021 Greece
+/topk-AgeRanges 3 Germany H1N1 2-5-2005 1-4-2015
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015  
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015  
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015  
+/diseaseFrequency COVID-19 01-01-2000 01-01-2021
+/searchPatientRecord 50
+/diseaseFrequency COVID-19 01-01-2000 01-01-2021
+/searchPatientRecord 100
+/diseaseFrequency SARS-COV-2 01-01-2000 01-01-2021 Greece
+/topk-AgeRanges 3 Germany H1N1 2-5-2005 1-4-2015
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015  
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015  
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015  
+/diseaseFrequency COVID-19 01-01-2000 01-01-2021
+/searchPatientRecord 50
+/diseaseFrequency COVID-19 01-01-2000 01-01-2021
+/searchPatientRecord 100
+/diseaseFrequency SARS-COV-2 01-01-2000 01-01-2021 Greece
+/topk-AgeRanges 3 Germany H1N1 2-5-2005 1-4-2015
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015  
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015  
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015  
+/diseaseFrequency COVID-19 01-01-2000 01-01-2021
+/searchPatientRecord 50
+/diseaseFrequency COVID-19 01-01-2000 01-01-2021
+/searchPatientRecord 100
+/diseaseFrequency SARS-COV-2 01-01-2000 01-01-2021 Greece
+/topk-AgeRanges 3 Germany H1N1 2-5-2005 1-4-2015
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015  
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015  
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015  
+/diseaseFrequency COVID-19 01-01-2000 01-01-2021
+/searchPatientRecord 50
+/diseaseFrequency COVID-19 01-01-2000 01-01-2021
+/searchPatientRecord 100
+/diseaseFrequency SARS-COV-2 01-01-2000 01-01-2021 Greece
+/topk-AgeRanges 3 Germany H1N1 2-5-2005 1-4-2015
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015  
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015  
+/numPatientDischarges EVD 10-03-2013 19-03-2019  
+/searchPatientRecord 177 
+/numPatientDischarges MERS 17-03-2008 20-03-2014 China 
+/diseaseFrequency EVD 12-04-2009 07-10-2012 USA 
+/topk-AgeRanges 2 Tyrkey SARS-1 25-06-2000 06-11-2018 
+/topk-AgeRanges 4 Argentina HIV 12-11-2014 01-04-2015 
+/diseaseFrequency SARS-COV-2 27-11-2019 06-12-2019 Brazil 
+/numPatientAdmissions H1N1 11-02-2003 12-01-2006 Egypt 
+/numPatientAdmissions HIV 18-02-2012 30-09-2015 France 
+/topk-AgeRanges 4 USA SARS-COV-2 29-07-2014 16-12-2017 
+/diseaseFrequency SARS-COV-2 29-04-2014 28-11-2016  
+/numPatientAdmissions HIV 10-07-2016 02-05-2018 Greece 
+/topk-AgeRanges 1 Brazil SARS-COV-2 14-04-2005 29-06-2014 
+/numPatientAdmissions SARS-COV-2 10-03-2005 04-02-2009  
+/diseaseFrequency SARS-COV-2 20-03-2019 10-06-2019 Spain 
+/searchPatientRecord 910 
+/diseaseFrequency EVD 24-08-2011 04-06-2015  

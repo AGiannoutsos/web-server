@@ -11,7 +11,7 @@ OBJ = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRC))
 
 OBJ_SERV = build/whoServer.o build/circular_buffer.o build/whoServer_thread_functions.o build/util.o build/message_handlers.o build/master_functions.o build/socket_functions.o  build/queries_master.o  
  
-OBJ_CLNT = build/whoClient.o build/circular_buffer.o build/whoClient_thread_functions.o build/util.o build/message_handlers.o build/master_functions.o build/socket_functions.o build/whoClient_thread_functions.o build/queries_master.o build/queries_list.o
+OBJ_CLNT = build/whoClient.o build/whoClient_thread_functions.o build/util.o build/message_handlers.o build/master_functions.o build/socket_functions.o build/whoClient_thread_functions.o build/queries_master.o build/queries_list.o
 
 OBJ_MSTR = build/master.o build/message_handlers.o build/util.o build/date.o build/hashtable.o build/patient_list.o build/ht_avlt.o build/avl_tree.o build/queries_master.o build/master_functions.o
 

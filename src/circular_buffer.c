@@ -87,7 +87,7 @@ int CBUFFER_Is_Available(Circular_Buffer* cbuffer){
     }
 }
 
-int CBUFFER_Add(Circular_Buffer* cbuffer, int socket, int type){
+int CBUFFER_Add(Circular_Buffer* cbuffer, int socket, int type, char* ip_address){
 
     // if buffer full return error
     if (CBUFFER_Is_Full(cbuffer)){
@@ -100,6 +100,8 @@ int CBUFFER_Add(Circular_Buffer* cbuffer, int socket, int type){
 
         cbuffer->cbuffer_node[head].socket = socket;
         cbuffer->cbuffer_node[head].type = type;
+        memset(cbuffer->cbuffer_node[head].ip_address, 0, 32);
+        strcpy(cbuffer->cbuffer_node[head].ip_address, ip_address);
         
         // update head
         head = (head+1) % cbuffer->size;
@@ -120,39 +122,40 @@ int CBUFFER_Add(Circular_Buffer* cbuffer, int socket, int type){
 
 
 // add with syncronization
-int CBUFFER_Add_sync(Circular_Buffer* cbuffer, int socket, int type){
+int CBUFFER_Add_sync(Circular_Buffer* cbuffer, int socket, int type, char* ip_address){
 
     pthread_mutex_lock(cbuffer->cbuffer_mutex);
 
     while( CBUFFER_Is_Full(cbuffer)){
-        printf("found buffer full!! \n\n");
+        // printf("found buffer full!! \n\n");
         // wait to empy signal
         pthread_cond_wait(cbuffer->cbuffer_empty_condition, cbuffer->cbuffer_mutex);
     }
 
-    CBUFFER_Add(cbuffer, socket, type);
+    CBUFFER_Add(cbuffer, socket, type, ip_address);
     
     pthread_mutex_unlock(cbuffer->cbuffer_mutex);
     pthread_cond_signal(cbuffer->cbuffer_full_condition);
 }
 
 // pop with syncronization
-int CBUFFER_Pop_sync(Circular_Buffer* cbuffer, int* socket, int* type){
+int CBUFFER_Pop_sync(Circular_Buffer* cbuffer, int* socket, int* type, char* ip_address){
     pthread_mutex_lock(cbuffer->cbuffer_mutex);
 
-    while ( CBUFFER_Is_Empty(cbuffer) ){
-        printf("found buffer empty!!! %ld \n\n", pthread_self()%10);
+    // check also for signal
+    while ( CBUFFER_Is_Empty(cbuffer) && signal_occured == 0 ){
+        // printf("found buffer empty!!! %ld \n\n", pthread_self()%10);
         // wait till full signal
         pthread_cond_wait(cbuffer->cbuffer_full_condition, cbuffer->cbuffer_mutex);
     }
 
-    CBUFFER_Pop(cbuffer, socket, type);
+    CBUFFER_Pop(cbuffer, socket, type, ip_address);
 
     pthread_mutex_unlock(cbuffer->cbuffer_mutex);
     pthread_cond_signal(cbuffer->cbuffer_empty_condition);
 }
 
-int CBUFFER_Pop(Circular_Buffer* cbuffer, int* socket, int* type){
+int CBUFFER_Pop(Circular_Buffer* cbuffer, int* socket, int* type, char* ip_address){
 
     // if buffer full return error
     if (CBUFFER_Is_Empty(cbuffer)){
@@ -165,6 +168,8 @@ int CBUFFER_Pop(Circular_Buffer* cbuffer, int* socket, int* type){
 
         *socket = cbuffer->cbuffer_node[tail].socket;
         *type = cbuffer->cbuffer_node[tail].type;
+        strcpy(ip_address, cbuffer->cbuffer_node[tail].ip_address);
+        // *ip_address = cbuffer->cbuffer_node[tail].ip_address;
         
         // update tail
         tail = (tail+1) % cbuffer->size;
@@ -186,7 +191,7 @@ int CBUFFER_Pop(Circular_Buffer* cbuffer, int* socket, int* type){
 void CBUFFER_Print(Circular_Buffer* cbuffer){
 
     for (int i = 0; i < cbuffer->size; i++){
-        printf("i(%d) sock %d typ %d", i, cbuffer->cbuffer_node[i].socket, cbuffer->cbuffer_node[i].type);
+        printf("i(%d) sock %d typ %d  ip %s", i, cbuffer->cbuffer_node[i].socket, cbuffer->cbuffer_node[i].type, cbuffer->cbuffer_node[i].ip_address);
         if( i == cbuffer->head)
             printf(" head ");
         if( i == cbuffer->tail )
@@ -199,41 +204,145 @@ void CBUFFER_Print(Circular_Buffer* cbuffer){
 
 // init port stack
 // last item is null
-void PSTACK_Init(Port_Stack* stack){
+void WINFO_Init(Workers_Info* stack){
 
-    stack->num_of_ports = 0;
+    stack->num_of_workers = 0;
     stack->port = malloc(sizeof(int));
-    stack->port[0] = 0;
+    stack->port[0] = -1;
+    stack->id = malloc(sizeof(int));
+    stack->id[0] = -1;
     stack->size = 1;
     stack->ip_address = NULL;
 }
 
+void WINFO_Init_sync(Workers_Info* stack, pthread_mutex_t* worker_info_mutex){
+    stack->num_of_workers = 0;
+    stack->port = malloc(sizeof(int));
+    stack->port[0] = -1;
+    stack->id = malloc(sizeof(int));
+    stack->id[0] = -1;
+    stack->size = 1;
+    stack->ip_address = NULL;
+
+    // init mutex
+    stack->worker_info_mutex = worker_info_mutex;
+}
 
 
-void PSTACK_Destroy(Port_Stack* stack){
+void WINFO_Destroy(Workers_Info* stack){
     free(stack->port);
+    free(stack->id);
+    free(stack->ip_address);
 }
 
+// when inserting id must be unique
+// other wise it will overight the port of the existing id in case that a worker dies and resends its port number
+int WINFO_Insert(Workers_Info* stack, int port, char* ip_address, int id){
 
-int PSTACK_Insert(Port_Stack* stack, int port, char* ip_address){
-
-    // reallocate and add NULL in the end
-    stack->port = realloc(stack->port, (stack->size + 1)*sizeof(int));
-    stack->port[stack->size-1] = port;
-    stack->port[stack->size] = 0;
-    stack->num_of_ports++;
-    stack->size++;
-    // copy ip address
-    if (stack->ip_address == NULL){
-        stack->ip_address = malloc((strlen(ip_address)+1)*sizeof(char));
-        strcpy(stack->ip_address, ip_address);
+    // search if id exists
+    int id_exists = -1;
+    int i = 0;
+    for (i = 0; i < stack->num_of_workers; i++){
+        if (stack->id[i] == id){
+            id_exists = i;
+            break;
+        }
     }
-    printf("insrted %d\n",port);
+    
+    // if id does not exist
+    if (id_exists == -1) {
+        // reallocate and add -1 in the end
+        stack->port = realloc(stack->port, (stack->size + 1)*sizeof(int));
+        stack->port[stack->size-1] = port;
+        stack->port[stack->size] = -1;
+        // reallocate for the ids
+        stack->id = realloc(stack->id, (stack->size + 1)*sizeof(int));
+        stack->id[stack->size-1] = id;
+        stack->id[stack->size] = -1;
+
+        stack->num_of_workers++;
+        stack->size++;
+        // copy ip address
+        if (stack->ip_address == NULL){
+            stack->ip_address = malloc((strlen(ip_address)+1)*sizeof(char));
+            strcpy(stack->ip_address, ip_address);
+        }
+        printf("insrted %d\n",id);
+    }
+    // if exists
+    else{
+        stack->port[id_exists] = port;
+    }
 
 }
 
+// synced version
+// when inserting id must be unique
+// other wise it will overight the port of the existing id in case that a worker dies and resends its port number
+int WINFO_Insert_sync(Workers_Info* stack, int port, char* ip_address, int id){
+    // mutex lock
+    pthread_mutex_lock(stack->worker_info_mutex);
 
+    // search if id exists
+    int id_exists = -1;
+    int i = 0;
+    for (i = 0; i < stack->num_of_workers; i++){
+        if (stack->id[i] == id){
+            id_exists = i;
+            break;
+        }
+    }
+    
+    // if id does not exist
+    if (id_exists == -1) {
+        // reallocate and add -1 in the end
+        stack->port = realloc(stack->port, (stack->size + 1)*sizeof(int));
+        stack->port[stack->size-1] = port;
+        stack->port[stack->size] = -1;
+        // reallocate for the ids
+        stack->id = realloc(stack->id, (stack->size + 1)*sizeof(int));
+        stack->id[stack->size-1] = id;
+        stack->id[stack->size] = -1;
 
-int* PSTACK_Get_Stack(Port_Stack* stack){
+        stack->num_of_workers++;
+        stack->size++;
+        // copy ip address
+        if (stack->ip_address == NULL){
+            stack->ip_address = malloc((strlen(ip_address)+1)*sizeof(char));
+            strcpy(stack->ip_address, ip_address);
+        }
+        printf("insrted %d\n",id);
+    }
+    // if exists
+    else{
+        stack->port[id_exists] = port;
+    }
+
+    // unlock
+    pthread_mutex_unlock(stack->worker_info_mutex);
+}
+
+int WINFO_Get_Ports_Copy_sync(Workers_Info* stack, int** copy_){
+    // lock mutex
+    pthread_mutex_lock(stack->worker_info_mutex);
+
+    // copy the ports to given pointer
+    int* copy = malloc(stack->size*sizeof(int));
+    memcpy(copy, stack->port, stack->size*sizeof(int));
+    *copy_ = copy;
+
+    // unlock
+    pthread_mutex_unlock(stack->worker_info_mutex);
+}
+
+int WINFO_Get_num_of_workers_sync(Workers_Info* stack, int* num_of_workers){
+    pthread_mutex_lock(stack->worker_info_mutex);
+
+    *num_of_workers = stack->num_of_workers;
+
+    pthread_mutex_unlock(stack->worker_info_mutex);
+}
+
+int* WINFO_Get_Stack(Workers_Info* stack){
     return stack->port;
 }

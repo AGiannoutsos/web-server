@@ -28,7 +28,7 @@ void read_statistics_from_workers(int i, int num_of_workers, int* read_fds, Buff
 // queries
 int queries(Message_vector* command, Worker* worker, int num_of_workers, int* write_fds, int* read_fds, int buffer_size, int* success, int* fail);
 // queries for the server format
-int queries_server(Message_vector* command, int num_of_workers, int* write_fds, int* read_fds, int buffer_size, int* success, int* fail);
+int queries_server(Message_vector* command, Message_vector* results_printed, int num_of_workers, int* write_fds, int* read_fds, int buffer_size, int* success, int* fail);
 
 
 // signal actions

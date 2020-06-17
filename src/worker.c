@@ -18,6 +18,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/select.h>
+#include <net/if.h>
+#include <sys/ioctl.h>
 
 #include "../includes/worker_functions.h"
 
@@ -78,7 +80,7 @@ int main(int arc, char** argv){
 
     SIGNAL_action.sa_handler = handler;
     SIGNAL_action.sa_mask = int_quit_usr_signal_mask;
-    SIGNAL_action.sa_flags = SA_RESTART | SA_SIGINFO;
+    SIGNAL_action.sa_flags = SA_SIGINFO;
     sigaction(SIGINT, &SIGNAL_action, NULL);
     sigaction(SIGQUIT, &SIGNAL_action, NULL);
     sigaction(SIGUSR1, &SIGNAL_action, NULL);
@@ -156,13 +158,46 @@ int main(int arc, char** argv){
     memset(&connection_addres, 0, sizeof(connection_addres));
     socklen_t connection_addres_len = sizeof(connection_addres);
 
+    // get port and ip
     check( getsockname(queries_socket, (struct sockaddr*) &connection_addres, &connection_addres_len), "Socket get name error" );
     int queries_port = ntohs(connection_addres.sin_port);
+    char connection_ip[INET_ADDRSTRLEN];
+    inet_ntop(AF_INET, &(connection_addres.sin_addr.s_addr), connection_ip, INET_ADDRSTRLEN);
+
+
+
+
+
+    // struct ifreq ifr;
+    // int fd;
+
+    // fd = socket(AF_INET, SOCK_DGRAM, 0);
+
+
+
+    // /* I want to get an IPv4 IP address */
+    // ifr.ifr_addr.sa_family = AF_INET;
+
+    // /* I want IP address attached to "eth0" */
+    // strncpy(ifr.ifr_name, "eth0", IFNAMSIZ-1);
+
+    // ioctl(fd, SIOCGIFADDR, &ifr);
+
+    // close(fd);
+
+    // /* display result */
+    // printf("\n\n(%s)\n\n\n", inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr));
+
+
+    // printf("\n\n IP ADREASSSSSS   %s \n\n\n", connection_ip);
 
 
     // connect with server
     int server_socket = SOCKET_Connect(AF_INET, SOCK_STREAM, atoi(me_worker->server_port), me_worker->server_ip);
-    check(server_socket, "Server connection failed");
+    if (server_socket < 0){
+        perror("Server connection failed");
+        exit(0);
+    }
     printf("\n port numberr %d  %d\n\n", queries_port, server_socket);
 
 
@@ -179,58 +214,95 @@ int main(int arc, char** argv){
 
 
     // send socket queries port number to server and ip address
+    // also send the worekr id in ordr to distinguish if a worker has died 
     char port_string[64] = {0}; Message_vector queries_port_message; Message_Init(&queries_port_message);
-    queries_port_message.num_of_args = 2; queries_port_message.args = malloc(2*sizeof(char*));
-    sprintf(port_string, "%d", queries_port); queries_port_message.args[0] = malloc((strlen(port_string)+1)*sizeof(char));
+    queries_port_message.num_of_args = 3; queries_port_message.args = malloc(3*sizeof(char*));  sprintf(port_string, "%d", queries_port); 
+    // port nummber
+    queries_port_message.args[0] = malloc((strlen(port_string)+1)*sizeof(char));
     strcpy(queries_port_message.args[0], port_string);
-    queries_port_message.args[1] = malloc((strlen(IP_ADDRESS)+1)*sizeof(char));
-    strcpy(queries_port_message.args[1], IP_ADDRESS);
+    // ip address
+    queries_port_message.args[1] = malloc((strlen(connection_ip)+1)*sizeof(char));
+    strcpy(queries_port_message.args[1], connection_ip);
+    // id
+    queries_port_message.args[2] = malloc((strlen(argv[2])+1)*sizeof(char));
+    strcpy( queries_port_message.args[2] , argv[2]);
 
     Message_Write(server_socket, &queries_port_message, buffer_size);
     Message_Write_End_Com(server_socket, buffer_size); 
 
     // end communication with statistivs port of server
-    check( shutdown(server_socket, SHUT_RDWR), "Shutdown error");
+    // check( shutdown(server_socket, SHUT_RDWR), "Shutdown error");
     close(server_socket);
 
+    // delete previous buffer with master
+    Message_Destroy_buffer_offset(&buffer, &previous_offset, 1);
 
     struct sockaddr_in connection_addres_;
-    socklen_t connection_addres_len_ = 0;
+    socklen_t connection_addres_len_ = sizeof(connection_addres_);
     int queries_fd = 0;
     int num_of_args = 0;
     int query_status = 0;
     Message_vector command;
     Message_Init(&command);
 
+
+    int byread;
+    char chunk[100];
+
     // Unblock codes critical part
     sigprocmask(SIG_UNBLOCK, &int_quit_usr_signal_mask, NULL);
 
     // start accepting queries
     do{
-        printf("ip %s port %s\n",me_worker->server_ip, me_worker->server_port);
-        // delete previous buffer
-        Message_Destroy_buffer_offset(&buffer, &previous_offset, 1);
 
         // listen for server requests  
         queries_fd = accept(queries_socket, (struct sockaddr*) &connection_addres_, &connection_addres_len_);
-        check(queries_fd, "Accept failed");
 
-        // set socket non-block
-        check( fcntl(queries_fd, F_SETFL, fcntl(queries_fd, F_GETFL, 0) | O_NONBLOCK), "Socket Non-block error");
-
-        // create new buffer for this only query
-        Message_Create_buffer_offset(&buffer, &previous_offset, 1);
-
-        // Listen command from master
-        previous_offset = Message_Read_from_one_signal(&queries_fd, 0, &command, buffer, previous_offset, buffer_size);
-
-        queries_started = 1;
-
-        Message_Print(&command);
-        // start query only if no signal has arrived
+        // start listening only if no signal has arrived
         if ( signal_occured == 0){
+            check(queries_fd, "Accept failed");
+
+            // set socket non-block
+            // check( fcntl(queries_fd, F_SETFL, fcntl(queries_fd, F_GETFL, 0) | O_NONBLOCK), "Socket Non-block error");
+
+            // create new buffer for this only query
+            Message_Create_buffer_offset(&buffer, &previous_offset, 1);
+
+            // Listen command from master
+            previous_offset = Message_Read_from_one_socket(&queries_fd, 0, &command, buffer, previous_offset, buffer_size);
+
+            // start query only if no signal has arrived
+            // Message_Print(&command);
+            printf("> %s %s\n", command.args[0], command.args[1]);
+            queries_started = 1;
+            // usleep(200000);
             queries(&command, &success, &fail, me_worker, &queries_fd, buffer_size, &patient_list, &disease_hash_table, &country_hash_table);
+
+            // deallocate buffer
+            Message_Destroy_buffer_offset(&buffer, &previous_offset, 1);
+
+            // shutdown(queries_fd, SHUT_WR);
+
+            // while((byread = read(queries_fd, chunk, 100)) != 0)
+            // {
+            //     if (byread < 0)
+            //     {
+            //             perror("connetction cloded error");
+            //             printf("errno %d  %d\n",errno, byread);
+            //         if (errno != 9)
+            //         {
+            //             /* print error in log file */
+            //             break;
+            //         }
+            //     }
+
+            // }
+            // perror("connetction cloded error");
+            //             printf("errno %d  %d\n",errno, byread);
+            close(queries_fd);
         }
+
+
         
         if ( signal_occured == 1){
 
@@ -254,7 +326,6 @@ int main(int arc, char** argv){
         }
 
         queries_started = 0;
-        close(queries_fd);
     } while(exit_status == 0);
 
 

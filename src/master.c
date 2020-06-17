@@ -146,6 +146,7 @@ int main(int argc, char** argv){
     pipe_id = malloc(num_of_workers*sizeof(int));
     for (int i = 0; i < num_of_workers; i++)
         pipe_id[i] = i;
+
     // create pipes with unique id
     create_pipes(pipe_id, num_of_workers);
     
@@ -192,52 +193,55 @@ int main(int argc, char** argv){
 
     // start the queries
     do{
-        // get and define the arguments of the commands
-        // read command from stdin
-        // use select and read to interupt for singlal handler
-        memset(string_command, 0, READ_BUFFER_SIZE);
-        get_fd_set(&fd_set, read_fds, num_of_workers); FD_SET(0, &fd_set);
-        timeval.tv_sec = TIMEOUT_SEC;  timeval.tv_usec = TIMEOUT_USEC;
-        total_bytes_read = 0;
-        num_of_args = 0;
-        while(signal_occured == 0 && num_of_args == 0 ){
+        // // get and define the arguments of the commands
+        // // read command from stdin
+        // // use select and read to interupt for singlal handler
+        // memset(string_command, 0, READ_BUFFER_SIZE);
+        // get_fd_set(&fd_set, read_fds, num_of_workers); FD_SET(0, &fd_set);
+        // timeval.tv_sec = TIMEOUT_SEC;  timeval.tv_usec = TIMEOUT_USEC;
+        // total_bytes_read = 0;
+        // num_of_args = 0;
+        // while(signal_occured == 0 && num_of_args == 0 ){
 
-            select_output = select(STDOUT_FILENO+1, &fd_set, NULL, NULL, &timeval);
+        //     select_output = select(STDOUT_FILENO+1, &fd_set, NULL, NULL, &timeval);
 
-            if (select_output > 0 && signal_occured == 0 /*&& FD_ISSET(STDIN_FILENO, &fd_set) */){
-                while(   (bytes_read = read(STDIN_FILENO, intermediate_buffer, buffer_size)) > 0 ){
-                    // copy read bytes
-                    memcpy(string_command+total_bytes_read, intermediate_buffer, bytes_read );
-                    total_bytes_read += bytes_read;
-                    string_command[total_bytes_read] = '\0';
-                    // scan for end of line
-                    num_of_args = number_of_args(string_command);
-                    if ((string_command[total_bytes_read-1] == '\n' && num_of_args > 0)  || signal_occured == 1)
-                        break;
-                    memset(intermediate_buffer, 0, buffer_size);
-                }
-            }
-            else{
-                // reset timer for long awaited input
-                FD_ZERO(&fd_set); FD_SET(STDOUT_FILENO, &fd_set);
-                timeval.tv_sec = TIMEOUT_SEC;  timeval.tv_usec = TIMEOUT_USEC;
-            }
+        //     if (select_output > 0 && signal_occured == 0 /*&& FD_ISSET(STDIN_FILENO, &fd_set) */){
+        //         while(   (bytes_read = read(STDIN_FILENO, intermediate_buffer, buffer_size)) > 0 ){
+        //             // copy read bytes
+        //             memcpy(string_command+total_bytes_read, intermediate_buffer, bytes_read );
+        //             total_bytes_read += bytes_read;
+        //             string_command[total_bytes_read] = '\0';
+        //             // scan for end of line
+        //             num_of_args = number_of_args(string_command);
+        //             if ((string_command[total_bytes_read-1] == '\n' && num_of_args > 0)  || signal_occured == 1)
+        //                 break;
+        //             memset(intermediate_buffer, 0, buffer_size);
+        //         }
+        //     }
+        //     else{
+        //         // reset timer for long awaited input
+        //         FD_ZERO(&fd_set); FD_SET(STDOUT_FILENO, &fd_set);
+        //         timeval.tv_sec = TIMEOUT_SEC;  timeval.tv_usec = TIMEOUT_USEC;
+        //     }
 
-        }
+        // }
 
-        // if any signal happens here then wait for the query to be completed and then sigkill the workers
-        // queries
-        // only if no signal has occured
-        queries_started = 1;
-        if ( signal_occured == 0){
-            Message_to_vector(string_command, &command);
-            exit_status = queries(&command, worker, num_of_workers, write_fds, read_fds, buffer_size, &success, &fail);
-            Message_Delete(&command);
-            fflush(stdout);
-        }
-        queries_started = 0;
+        // // if any signal happens here then wait for the query to be completed and then sigkill the workers
+        // // queries
+        // // only if no signal has occured
+        // queries_started = 1;
+        // if ( signal_occured == 0){
+        //     Message_to_vector(string_command, &command);
+        //     exit_status = queries(&command, worker, num_of_workers, write_fds, read_fds, buffer_size, &success, &fail);
+        //     Message_Delete(&command);
+        //     fflush(stdout);
+        // }
+        // queries_started = 0;
 
+        // pause and wait for a signal
+        pause();
  
+        
         // signal handling flag
         if( signal_occured == 1){
             // block all incomign signals during signal handlers

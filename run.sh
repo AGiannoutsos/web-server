@@ -1,8 +1,6 @@
 #! /bin/bash
 
-rm -f log_file.*
-rm -f worker.*
-rm -f master.*
+
 
 if [ "$1" == "s" ]
     then
@@ -30,7 +28,7 @@ elif [ "$1" == "c" ]
     if [ "${10}" == "v" ]
         then
         make
-        valgrind -v --trace-children=yes --show-leak-kinds=all --leak-check=full  --fair-sched=yes --track-origins=yes ./whoClient ${*:2}
+        valgrind -v --trace-children=yes --show-reachable=yes --show-leak-kinds=all --leak-check=full  --fair-sched=yes --track-origins=yes ./whoClient ${*:2}
     elif [ "${10}" == "g" ]
         then
         make
@@ -45,6 +43,9 @@ elif [ "$1" == "c" ]
 
 elif [ "$1" == "m" ]
     then
+    rm -f log_file.*
+    rm -f worker.*
+    rm -f master.*
 
     if [ "${12}" == "v" ]
         then

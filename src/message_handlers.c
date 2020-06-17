@@ -32,6 +32,23 @@ void Message_Print(Message_vector* message_vector){
     
 }
 
+void Message_Print_results(Message_vector* results){
+    int num_of_results = results->num_of_args;
+
+    // if results ar binary then change the print format
+    if (num_of_results%2 == 0 ){
+        for (int i = 0; i < num_of_results; i+=2){
+            printf("%s %s \n",results->args[i], results->args[i+1]);
+        }
+    }
+    else{
+        for (int i = 0; i < num_of_results; i++){
+            printf("%s ", results->args[i]);
+        }
+        printf("\n");
+    }
+}
+
 // chech the message if end of message e*e*e and start of message s*s*s are included int he mesage strig
 // if yes then it means that a complete message is sent
 //  then strip unwanted string from the message and return 1
@@ -264,8 +281,11 @@ int Message_Read_string(int fd, int bytes_write, Message_vector* message, Buffer
     char* new_buffer;
     int read_buffer_size = READ_BUFFER_SIZE;
 
+    // printf("pipes 1 %d %d \n", fd, errno);
     while( (bytes_read = read(fd, inter_buffer, buffer_size)) > 0){
-
+    // printf("pipes 2 %d %d %d\n", fd, errno, bytes_read);
+    // usleep(100000);
+    // printf("\n>>> %.*s <<<\n", bytes_read, inter_buffer);
         // if buffer size is exceded then copy the previous one and allovate more
         if( bytes_write + bytes_read > buffer->buffer_size){
             new_read_buffer_size = (buffer->buffer_size + bytes_write + bytes_read) * READ_BUFFER_SIZE_INCREASE_FACTOR;
@@ -300,6 +320,7 @@ int Message_Read_string(int fd, int bytes_write, Message_vector* message, Buffer
     return bytes_write;
 }
 
+extern int errno;
 // read from pipe and store read in a bufer array with end of string '\0'
 // the decode the message and return it
 int* Message_Read_from_one(int* fds, int num_of_fd, Message_vector* _message, Buffer* buffer, int* previous_offset, int buffer_size){
@@ -307,8 +328,8 @@ int* Message_Read_from_one(int* fds, int num_of_fd, Message_vector* _message, Bu
     int bytes_read = 0;
     char* end_of_message;
     int* bytes_write = previous_offset;
-    char inter_buffer[buffer_size];
-    memset(inter_buffer, '\0', buffer_size);
+    // char inter_buffer[buffer_size];
+    // memset(inter_buffer, '\0', buffer_size);
     
     Message_vector message;
     Message_Init(&message);
@@ -321,6 +342,7 @@ int* Message_Read_from_one(int* fds, int num_of_fd, Message_vector* _message, Bu
     timeval.tv_sec = 0;
     timeval.tv_usec = 0;
 
+
     // Select if pipe haw data to offer then sleep
     int select_output = 0;
     int exit_select = 0;
@@ -328,6 +350,7 @@ int* Message_Read_from_one(int* fds, int num_of_fd, Message_vector* _message, Bu
         
         // wait 200 ms and check again the pipe
         select_output = select(fds[fd]+1, &fd_set, NULL, NULL, &timeval);
+        // printf("ma to 8eo %d %d  %d   %d    %d\n",select_output, fds[0], pthread_self(), bytes_write[fd], errno); fflush(stdout);
 
         // if pipe is ready then select it to read
         if( select_output > 0 ){  
@@ -357,7 +380,7 @@ int* Message_Read_from_one(int* fds, int num_of_fd, Message_vector* _message, Bu
             // reset timer for long awaited input
             get_fd_set(&fd_set, &fds[fd], 1);
             timeval.tv_sec = TIMEOUT_SEC;
-            timeval.tv_usec = TIMEOUT_USEC;
+            timeval.tv_usec = TIMEOUT_USEC*2;
             // pipe is not available but i have avoilable data in buffer
             if(bytes_write[fd] > 1 ){
                 Message_Delete(&message);
@@ -379,6 +402,158 @@ int* Message_Read_from_one(int* fds, int num_of_fd, Message_vector* _message, Bu
                 }
             }
         }
+
+   }
+    
+    // copy messsage and remove MSG_END MSG_START 
+    Message_Delete(_message);
+    Message_Copy(_message, &message, 1, 1);
+    Message_Delete(&message);
+
+    return bytes_write;
+}
+
+int Message_Read_string_socket(int fd, int bytes_write, Message_vector* message, Buffer* buffer, int buffer_size){
+    int bytes_read = 0;
+    char inter_buffer[buffer_size];
+    memset(inter_buffer, '\0', buffer_size);
+    int new_read_buffer_size;
+    char* new_buffer;
+    int read_buffer_size = READ_BUFFER_SIZE;
+
+            // printf("opaa -> %d  %d  %d\n",bytes_write,fd,  errno);
+
+
+    Message_Delete(message);
+    // Check if message is available
+    Message_to_vector(buffer->buffer, message);
+    // if message available then
+    // clean buffer till the first message
+    // reset and return offset of buffer
+    if (Message_Decoder(message) > 0){ 
+        return bytes_write;
+    }
+
+
+    while( (bytes_read = read(fd, inter_buffer, buffer_size)) > 0){
+        // if buffer size is exceded then copy the previous one and allovate more
+        if( bytes_write + bytes_read > buffer->buffer_size){
+            new_read_buffer_size = (buffer->buffer_size + bytes_write + bytes_read) * READ_BUFFER_SIZE_INCREASE_FACTOR;
+            new_buffer = malloc(new_read_buffer_size*sizeof(char));
+            memset(new_buffer, 0, new_read_buffer_size*sizeof(char));
+            // coppy old to new
+            memcpy(new_buffer, buffer->buffer, buffer->buffer_size);
+            // free old
+            free(buffer->buffer);
+            // arrange the pointers
+            buffer->buffer = new_buffer;
+            buffer->buffer_size = new_read_buffer_size;
+        }
+
+        // check bytes and write +offset
+        memcpy(buffer->buffer+bytes_write, inter_buffer, bytes_read);
+
+        bytes_write += bytes_read;
+        // flush intermediate buffer
+        memset(inter_buffer, '\0', buffer_size);
+
+        Message_Delete(message);
+        // Check if message is available
+        Message_to_vector(buffer->buffer, message);
+        // if message available then
+        // clean buffer till the first message
+        // reset and return offset of buffer
+        if (Message_Decoder(message) > 0){ 
+            break;
+        }
+    }
+    printf("opaa ->>> %d  %d  %d\n",bytes_read,fd, errno);
+    return bytes_write;
+}
+
+int* Message_Read_from_one_socket(int* fds, int num_of_fd, Message_vector* _message, Buffer* buffer, int* previous_offset, int buffer_size){
+    int fd = num_of_fd;
+    int bytes_read = 0;
+    char* end_of_message;
+    int* bytes_write = previous_offset;
+    // char inter_buffer[buffer_size];
+    // memset(inter_buffer, '\0', buffer_size);
+    
+    Message_vector message;
+    Message_Init(&message);
+
+    fd_set fd_set, read_set;
+    get_fd_set(&fd_set, &fds[fd], 1);
+
+    // set timer
+    struct timeval timeval;
+    timeval.tv_sec = TIMEOUT_SEC;
+    timeval.tv_usec = TIMEOUT_USEC;
+
+    // Select if pipe haw data to offer then sleep
+    int select_output = 0;
+    int exit_select = 0;
+    while(exit_select == 0){
+        read_set = fd_set;
+        timeval.tv_sec = TIMEOUT_SEC;
+        timeval.tv_usec = TIMEOUT_USEC;
+
+        // wait 200 ms and check again the pipe
+        // select_output = select(fds[fd]+1, &read_set, NULL, NULL, &timeval);
+        // printf("ma to 8eo socket %d  %d  %d   %d\n",select_output, fds[0], pthread_self(), bytes_write[fd]); fflush(stdout);
+        // if pipe is ready then select it to read
+        // if( select_output > 0 ){  
+
+
+            // while bytes available in pipe read and store to an intermediate buffer
+            // and then copy them on the inserted buffer
+            bytes_write[fd] = Message_Read_string_socket(fds[fd], bytes_write[fd], &message, &buffer[fd], buffer_size);
+            // if read is unavailable but buffer is the get data from it
+            // in case of large buffer size but small messages
+            if(bytes_write[fd] > 0 ){
+                Message_Delete(&message);
+                Message_to_vector(buffer[fd].buffer, &message);
+                // Message_Print(&message);
+                if (Message_Decoder(&message) > 0){ 
+                    end_of_message = strstr(buffer[fd].buffer, MSG_END);
+                    end_of_message += strlen(MSG_END);
+                    // reset offeset of bytews written
+                    bytes_write[fd] = (int)(buffer[fd].buffer - end_of_message) + bytes_write[fd];
+
+                    memmove(buffer[fd].buffer, end_of_message, bytes_write[fd]);
+                    // clear the buffer from dirty bytes
+                    memset(buffer[fd].buffer+bytes_write[fd], '\0', buffer[fd].buffer_size-bytes_write[fd]);
+                    // reset offset;
+                    exit_select = 1;
+                }
+            }
+        // }
+        // else{
+        //     // reset timer for long awaited input
+        //     get_fd_set(&fd_set, &fds[fd], 1);
+        //     timeval.tv_sec = TIMEOUT_SEC;
+        //     timeval.tv_usec = TIMEOUT_USEC;
+        //     // pipe is not available but i have avoilable data in buffer
+        //     if(bytes_write[fd] > 1 ){
+        //         Message_Delete(&message);
+        //         Message_to_vector(buffer[fd].buffer, &message);
+        //         // set timeout to 0 because there are still data in the buffer
+        //         timeval.tv_sec = 0;
+        //         timeval.tv_usec = 0;
+        //         if (Message_Decoder(&message) > 0){ 
+        //             end_of_message = strstr(buffer[fd].buffer, MSG_END);
+        //             end_of_message += strlen(MSG_END);
+        //             // reset offeset of bytews written
+        //             bytes_write[fd] = (int)(buffer[fd].buffer - end_of_message) + bytes_write[fd];
+
+        //             memmove(buffer[fd].buffer, end_of_message, bytes_write[fd]);
+        //             // clear the buffer from dirty bytes
+        //             memset(buffer[fd].buffer+bytes_write[fd], '\0', buffer[fd].buffer_size-bytes_write[fd]);
+        //             // reset offset;
+        //             exit_select = 1;
+        //         }
+        //     }
+        // }
 
    }
     
@@ -459,7 +634,7 @@ int Message_Write_string(int fd, char* buffer, int buffer_size){
 
     message_len = strlen(buffer);
     // while message exist send buffer_size chunks of data
-
+    // fprintf(stderr,"message len %d  fd  %d\n %s \n", message_len, fd, buffer);
     while (message_len > 0){
         // if message length < buffer size then send less bytes
         if (message_len < buffer_size){

@@ -36,6 +36,9 @@ typedef struct Thread_Args{
     int server_port;
     char* server_ip;
 
+    // print mutex
+    pthread_mutex_t* print_mutex;
+
 } Thread_Args;
 
 void *thread_connection_handler(void *args);

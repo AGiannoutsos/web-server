@@ -213,19 +213,18 @@ void SIGCHLD_function(Worker* worker, int num_of_workers, int* write_fds, int* r
             write_server_info_to_workers(worker, terminaterd_worker_position, terminaterd_worker_position+1, write_fds, buffer_size, worker[terminaterd_worker_position].server_ip ,  worker[terminaterd_worker_position].server_port);
 
             // receive statistics
-            read_statistics_from_workers(terminaterd_worker_position, terminaterd_worker_position+1, read_fds, buffer, previous_offset, buffer_size);
+            // read_statistics_from_workers(terminaterd_worker_position, terminaterd_worker_position+1, read_fds, buffer, previous_offset, buffer_size);
             
         }
     }
 }
 
-int queries_server(Message_vector* command,  int num_of_workers, int* write_fds, int* read_fds, int buffer_size, int* success, int* fail){
+int queries_server(Message_vector* command, Message_vector* results_printed,  int num_of_workers, int* write_fds, int* read_fds, int buffer_size, int* success, int* fail){
     int query_status = 0;
-
 
     if(strcmp(command->args[0], "/diseaseFrequency") == 0){
         // printf("Start query of diseaseFrequency\n\n");
-        query_status = disease_frequency(write_fds, read_fds, num_of_workers, command, buffer_size);
+        query_status = disease_frequency_server(write_fds, read_fds, num_of_workers, command, results_printed, buffer_size);
         if(query_status > 0)
             (*success)++;
         else
@@ -234,7 +233,7 @@ int queries_server(Message_vector* command,  int num_of_workers, int* write_fds,
     }
     else if(strcmp(command->args[0], "/topk-AgeRanges") == 0){
         // printf("Start query of topk-AgeRanges\n\n");
-        query_status = topk_age_ranges(write_fds, read_fds, num_of_workers, command, buffer_size);
+        query_status = topk_age_ranges_server(write_fds, read_fds, num_of_workers, command, results_printed, buffer_size);
         if(query_status > 0)
             (*success)++;
         else
@@ -242,7 +241,7 @@ int queries_server(Message_vector* command,  int num_of_workers, int* write_fds,
     }
     else if(strcmp(command->args[0], "/searchPatientRecord") == 0){
         // printf("Start query of searchPatientRecord\n\n");
-        query_status = search_patient_record(write_fds, read_fds, num_of_workers, command, buffer_size);
+        query_status = search_patient_record_server(write_fds, read_fds, num_of_workers, command, results_printed, buffer_size);
         if(query_status > 0)
             (*success)++;
         else
@@ -250,14 +249,14 @@ int queries_server(Message_vector* command,  int num_of_workers, int* write_fds,
     }
     else if(strcmp(command->args[0], "/numPatientAdmissions") == 0){
         // printf("Start query of numPatientAdmissions\n\n");
-        query_status = num_patients_admissions_discharges(write_fds, read_fds, num_of_workers, command, buffer_size);
+        query_status = num_patients_admissions_discharges_server(write_fds, read_fds, num_of_workers, command, results_printed, buffer_size);
         if(query_status > 0)
             (*success)++;
         else
             (*fail)++;
     }
     else if(strcmp(command->args[0], "/numPatientDischarges") == 0){
-        query_status = num_patients_admissions_discharges(write_fds, read_fds, num_of_workers, command, buffer_size);
+        query_status = num_patients_admissions_discharges_server(write_fds, read_fds, num_of_workers, command, results_printed, buffer_size);
         if(query_status > 0)
             (*success)++;
         else

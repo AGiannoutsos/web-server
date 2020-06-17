@@ -36,8 +36,14 @@ pthread_cond_t end_queries_condition;
 int end_queries;
 int threads_offline;
 
+// mutexes for printing the results
+pthread_mutex_t print_mutex;
+
+
+
+
 int main(int argc, char** argv){
-    printf("hello wolrd\n");
+
 
     char* queries_file_name;
     char* server_ip;
@@ -86,6 +92,8 @@ int main(int argc, char** argv){
     pthread_mutex_init(&end_queries_mutex, NULL);
     pthread_cond_init(&end_queries_condition, NULL);
 
+    pthread_mutex_init(&print_mutex, NULL);
+
 
     // init threads
     pthread_t* thread = malloc(num_of_threads*sizeof(pthread_t));
@@ -123,9 +131,10 @@ int main(int argc, char** argv){
         thread_args[thread_i].query = QLIST_Get_Last_query(&queries_list);
         thread_args[thread_i].server_ip = server_ip;
         thread_args[thread_i].server_port = server_port;
+        thread_args[thread_i].print_mutex = &print_mutex;
 
         // create thread and pass it the query
-        err = pthread_create( &(thread[thread_i]), NULL, thread_connection_handler, (void*) &(thread_args[thread_i]));
+        err = pthread_create( &thread[thread_i], NULL, thread_connection_handler, (void*) &(thread_args[thread_i]));
         check_t(err, "Thread Create error");
         thread_i++;
 
@@ -136,7 +145,7 @@ int main(int argc, char** argv){
         // if num of queries have reached the maximun number of threads then its time to send the data to server all together
         // or query file has reached its end
         if( (num_of_queries_read % num_of_threads == 0) || feof(queries_file_stream) || read_file_buffer[0] == '\n'){
-            printf("send queries all together\n\n");
+            // printf("send queries all together\n\n");
 
             //!!/ muted down start_query
 
@@ -154,11 +163,13 @@ int main(int argc, char** argv){
             // wait for threads to start at the same time
             pthread_mutex_lock(&threads_online_mutex);
             while( threads_online < thread_i){
-                printf(" online %d i %d\n",threads_online, thread_i);
+                // printf(" online %d i %d\n",threads_online, thread_i);
                 pthread_cond_wait(&threads_online_condition, &threads_online_mutex);
             }
             pthread_mutex_unlock(&threads_online_mutex);
 
+            end_queries = 0;
+            threads_offline = 0;
 
             pthread_mutex_lock(&start_queries_mutex);
             start_queries = 1;
@@ -169,22 +180,18 @@ int main(int argc, char** argv){
 
 
                 // sleep(1);
-            // wait for threads to join
-            // for (int i = 0; i < thread_i; i++){
-            //     err = pthread_join(thread[i], NULL);
-            //     perror_t(err, "Thread Join error");
-            //     // pritf("\n\n-->>%s<<---\n\n", strerror(err));
-            //     printf("joiedd\n");
-            // }
 
             // wait for all the threads to end at the same time
             pthread_mutex_lock(&threads_offline_mutex);
+            printf(" offline %d i %d\n",threads_offline, thread_i);
             while( threads_offline < thread_i){
-                // printf(" offline %d i %d\n",threads_offline, thread_i);
+                printf(" offline %d i %d\n",threads_offline, thread_i);
                 pthread_cond_wait(&threads_offline_condition, &threads_offline_mutex);
             }
             pthread_mutex_unlock(&threads_offline_mutex);
 
+            start_queries = 0;
+            threads_online = 0;
 
             pthread_mutex_lock(&end_queries_mutex);
             end_queries = 1;
@@ -192,16 +199,33 @@ int main(int argc, char** argv){
             pthread_cond_broadcast(&end_queries_condition);
 
 
-            // reset global variables after all threads have ended
-            thread_i = 0;
-            start_queries = 0;
-            end_queries = 0;
-            threads_online = 0;
-            threads_offline = 0;
+            for (int i = 0; i < thread_i; i++){
+                err = pthread_join(thread[i], NULL);
+                if (err < 0 ){
+                    perror("Join thread error\n");
+                }
+            }
+
+            // reset variables after all threads have ended but not queries have ended 
+            if ( !(feof(queries_file_stream) || read_file_buffer[0] == '\n') ){
+                memset(thread, 0, num_of_threads*sizeof(pthread_t));
+                thread_i = 0;
+            }
+            // wait for threads to join
+
+            // sleep(4);
+
         }
 
     }
 
+    // for (int i = 0; i < thread_i; i++){
+    //     printf("joiedd %d\n",thread[i]);
+    //     err = pthread_join(thread[i], NULL);
+    //     // check_t(err, "Thread Join error");
+    //     // pritf("\n\n-->>%s<<---\n\n", strerror(err));
+    //     perror("IIIIIIIIIIIIIIIIII\n");
+    // }
 
     // create socket
     // int sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -224,7 +248,7 @@ int main(int argc, char** argv){
     // if ( connect(sock, (struct sockaddr*) &server, sizeof(server)) < 0 )
     //     perror("Connection failed");
     // printf("Connected!!");
-    sleep(1);
+    // sleep(1);
 
     // check_t( pthread_mutex_destroy(&threads_online_mutex), "Thread mutex destroy error");
     // check_t( pthread_mutex_destroy(&threads_offline_mutex), "Thread mutex destroy error");
@@ -235,15 +259,17 @@ int main(int argc, char** argv){
     // check_t( pthread_cond_destroy(&threads_offline_condition), "Thread condition destroy error");
     // check_t( pthread_cond_destroy(&start_queries_condition), "Thread condition destroy error");
     // check_t( pthread_cond_destroy(&end_queries_condition), "Thread condition destroy error");
-
+    // sleep(1);
     fclose(queries_file_stream);
     QLIST_Destroy(&queries_list);
     free(thread);
+    free(thread_args);
     if( err = pthread_detach(pthread_self()) ) {
         perror_t("Thread Detach error ", err);
         exit(1);
     }
-
+    // pthread_exit(NULL); 
+    return 0; 
     // pthread_exit(NULL);
     // char buf[100] = {0};
 

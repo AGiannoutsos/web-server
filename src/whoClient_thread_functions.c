@@ -32,6 +32,7 @@ void *thread_connection_handler(void *args){
     char* query = thread_args->query;
     char* server_ip = thread_args->server_ip;
     int server_port = thread_args->server_port;
+    pthread_mutex_t* print_mutex = thread_args->print_mutex;
     //!!// mutex down start_query
 
     // mutex down new_thread 
@@ -45,7 +46,7 @@ void *thread_connection_handler(void *args){
     // mutex_up start_query
 
 
-    usleep(pthread_self()%90000);
+    // usleep(pthread_self()%90000);
 
     pthread_mutex_lock(&threads_online_mutex);
     threads_online++;
@@ -55,7 +56,7 @@ void *thread_connection_handler(void *args){
 
     pthread_mutex_lock(&start_queries_mutex);
     while( start_queries != 1){
-        printf("cant start query yet\n\n");
+        // printf("cant start query yet\n\n");
         pthread_cond_wait(&start_queries_condition, &start_queries_mutex);
     }
     pthread_mutex_unlock(&start_queries_mutex);
@@ -63,24 +64,60 @@ void *thread_connection_handler(void *args){
     // now that all threads are online its time to connect with the server
     int server_socket = SOCKET_Connect(AF_INET, SOCK_STREAM, server_port, server_ip);
     check(server_socket, "Connection with server failed");
+    printf("s %d\n",server_socket);
     
+
+    // set socket non-block
+    // check( fcntl(server_socket, F_SETFL, fcntl(server_socket, F_GETFL, 0) | O_NONBLOCK), "Socket Non-block error");
     
     // sent query to server
     // create message vector
     Message_vector query_message;
+    Message_vector results_message;
     Message_Init(&query_message);
+    Message_Init(&results_message);
+    // create buffer for results
+    Buffer *results_buffer;
+    int *results_previous_offset;
+    Message_Create_buffer_offset(&results_buffer, &results_previous_offset, 1);
 
+
+    // construct message
     query_message.num_of_args = 1;
     query_message.args = malloc(sizeof(char*));
     query_message.args[0] = malloc((strlen(query)+1)*sizeof(char));
     strcpy(query_message.args[0], query); 
 
-    Message_Write(server_socket, &query_message, 100);
-    Message_Write_End_Com(server_socket, 100);
+    // sleep(1);
+    // send query
+    Message_Write(server_socket, &query_message, BUFFER_DEFAULT_SIZE);
+    Message_Write_End_Com(server_socket, BUFFER_DEFAULT_SIZE);
+
+    // sleep(1);
+    // get results  and print safely
+    results_previous_offset = Message_Read_from_one_socket(&server_socket, 0, &results_message, results_buffer, results_previous_offset, 100);
+    while(!Message_Is_End_Com(&results_message, 1)){
+
+        // block stdout with mutex so that results are printed smooth
+        pthread_mutex_lock(print_mutex);
+        printf("%s", query);
+        Message_Print_results(&results_message);
+        printf("\n");
+        pthread_mutex_unlock(print_mutex);
+
+        results_previous_offset = Message_Read_from_one_socket(&server_socket, 0, &results_message, results_buffer, results_previous_offset, 100);
+    }
+
+    // send server end of com so that alla data have been transfered and connection can be closed
+    // Message_Write_End_Com(server_socket, BUFFER_DEFAULT_SIZE);
+    // sleep(1);
 
     Message_Delete(&query_message);
+    Message_Delete(&results_message);
+    Message_Destroy_buffer_offset(&results_buffer, &results_previous_offset, 1);
+    // printf("clo %d\n",server_socket);
 
-    printf(">(%d)>%d> %s %d %s", start_queries, pthread_self()%20 , query, server_port, server_ip);
+    // printf(">(%d)>%d> %s %d %s", start_queries, pthread_self()%20 , query, server_port, server_ip);
 
 
 
@@ -89,18 +126,21 @@ void *thread_connection_handler(void *args){
     //     perror("Shutdown failed");
 
     // exitng thread detaching
-    if( err = pthread_detach(pthread_self()) ) {
-        perror_t("Thread Detach error ", err);
-        exit(1);
-    }
     // exiting
     // usleep(pthread_self()%90000);
 
     pthread_mutex_lock(&threads_offline_mutex);
     threads_offline++;
+    // printf("---------------------> offline %d\n",threads_offline);
     pthread_mutex_unlock(&threads_offline_mutex);
     pthread_cond_signal(&threads_offline_condition);
 
+    close(server_socket);
+    // if( err = pthread_detach(pthread_self()) ) {
+    //     perror_t("Thread Detach error ", err);
+    //     exit(1);
+    // }
+    // fprintf( stderr,"clo %d\n",server_socket);
 
     pthread_mutex_lock(&end_queries_mutex);
     while( end_queries != 1){
@@ -112,4 +152,7 @@ void *thread_connection_handler(void *args){
 
     // printf("exitingggg \n");
     // pthread_exit(NULL);
+    // return 0;
+    // sleep(5);
+    
 }

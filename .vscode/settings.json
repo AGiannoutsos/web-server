@@ -6,6 +6,12 @@
         "istream": "c",
         "functional": "c",
         "tuple": "c",
-        "utility": "c"
+        "utility": "c",
+        "fstream": "c",
+        "iosfwd": "c",
+        "limits": "c",
+        "sstream": "c",
+        "streambuf": "c",
+        "string": "cpp"
     }
 }
