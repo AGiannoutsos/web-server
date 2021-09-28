@@ -7,8 +7,8 @@ This is the work of the spring semester System Programming course in 2020
 In this project there are implemented a distributed and optimized database with a multi-threaded web server and client that respond to queries about coronavirus cases all written in C language.
 
 Specifically, three have been implemented programs:
-1)    a master program that creates a series of Worker processes
-2)    a multi-threaded whoServer that collects summary statistics from Worker over a network
+1)    a master program that creates a series of Worker processes.
+2)    a multi-threaded whoServer that collects summary statistics from Worker over a network.
 processes and queries from client 
 3)    a multicreaded client whoClient program that creates a lot
 threads, where each thread plays the role of a client sending queries to whoServer.
